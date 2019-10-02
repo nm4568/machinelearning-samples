@@ -114,40 +114,15 @@ function plotLineChart(data, key, chartTitle) {
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ffcc33');
 
     var layout = {
-        title: {
-            text: 'Plot Title',
-            font: {
-                family: 'Courier New, monospace',
-                size: 24
-            },
-            xref: 'paper',
-            x: 0.05,
-        },
         xaxis: {
             tickangle: 0,
             showgrid: false,
             showline: false,
             zeroline: false,
-            title: {
-                text: 'x Axis',
-                font: {
-                    family: 'Arial',
-                    size: 18,
-                    color: '#7f7f7f'
-                }
-            },
             range: [trace_real.x.length - 10, trace_real.x.length] // was 12 beforen
 
         },
         yaxis: {
-            title: {
-                text: 'x Axis',
-                font: {
-                    family: 'Courier New, monospace',
-                    size: 15,
-                    color: '#7f7f7f'
-                }
-            },
             showgrid: false,
             showline: false,
             zeroline: false,
@@ -482,7 +457,7 @@ $(function () {
             Object.entries(data).forEach(function (chartData, index) {
                 var key = '';
                 var chartTitle = '';
-                var suffix = index % 2 ? '_0' : '_1';
+                var suffix = index % 2 ? '_2' : '_1';
                 switch (index) {
                     case 0:
                     case 1:
