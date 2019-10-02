@@ -111,15 +111,16 @@ function plotLineChart(data, key, chartTitle) {
         trace_real.y,
         forecast);
 
-    var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ffcc33');
+    var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ccff00');
 
     var layout = {
+                   
         xaxis: {
             tickangle: 0,
             showgrid: false,
             showline: false,
             zeroline: false,
-            range: [trace_real.x.length - 120, trace_real.x.length] // was 12 beforen
+            range: [trace_real.x.minLength, trace_real.x.length] // was 12 beforen
 
         },
         yaxis: {
@@ -138,6 +139,8 @@ function plotLineChart(data, key, chartTitle) {
             x: 0.85
         }
     };
+
+    /*
     var trace1 = {
         x: [-100, -99, -98, -97],
         y: [10, 15, 13, 11.4599981],
@@ -149,11 +152,12 @@ function plotLineChart(data, key, chartTitle) {
         y: [16, 5, 11, 9],
         type: 'scatter'
     };
-
+    
     var data = [trace1, trace2];
+    */
     //populating the charts
-    debugger;
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], {}, { showSendToCloud: true });}
+   // debugger;
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast,trace_mean], {}, { showSendToCloud: true });}
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
@@ -180,7 +184,7 @@ function TraceProductHistory(historyItems, key) {
         },
         text: texts,
         fill: 'tozeroy',
-        fillcolor: '#dd1828',
+        fillcolor: 'red',
         marker: {
             symbol: "circle",
             color: "white",
@@ -483,14 +487,19 @@ $(function () {
                         break;
                     case 4:
                     case 5:
-                    case 6:
                         key = 'riskImpactValue';
                         chartTitle = 'impact_lineChart'
                         break;
+                    case 6:
+                        key = 'riskImpactValue';
+                        chartTitle = 'impact_entity_lineChart'
+                        break;
                 }
 
-                if (index === 6) { return; }
+                /*
+                if (index === 7) { return; }
                 console.log(chartTitle + suffix);
+                */
 
                 plotLineChart(chartData, key, chartTitle + suffix);
             });
