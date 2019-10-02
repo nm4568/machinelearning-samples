@@ -176,10 +176,10 @@ function TraceProductHistory(historyItems, key) {
         marker: {
             symbol: "circle",
             color: "white",
-            size: 10,
+            size: 3,
             line: {
                 color: "black",
-                width: 3
+                width: 1
             }
         }
     };
@@ -215,10 +215,10 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         marker: {
             symbol: "circle",
             color: "white",
-            size: 10,
+            size: 3,
             line: {
                 color: "black",
-                width: 3
+                width: 1
             }
         }
     };
