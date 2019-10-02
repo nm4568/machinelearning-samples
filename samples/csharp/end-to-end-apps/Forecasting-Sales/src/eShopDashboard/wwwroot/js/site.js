@@ -174,9 +174,9 @@ function plotLineChart(forecast, history, description, price) {
 
     //populating the charts
 
-    Plotly.newPlot('risk_lineChart', [trace_real, trace_forecast, trace_mean], layout);
-    Plotly.newPlot('base_lineChart', [trace_real, trace_forecast, trace_mean], layout);
-    Plotly.newPlot('impact_lineChart', [trace_real, trace_forecast, trace_mean], layout);
+    Plotly.newPlot('risk_lineChart_1', [trace_real, trace_forecast, trace_mean], layout);
+    Plotly.newPlot('base_lineChart_1', [trace_real, trace_forecast, trace_mean], layout);
+    Plotly.newPlot('impact_lineChart_1', [trace_real, trace_forecast, trace_mean], layout);
 }
 
 function TraceProductHistory(historyItems) {
