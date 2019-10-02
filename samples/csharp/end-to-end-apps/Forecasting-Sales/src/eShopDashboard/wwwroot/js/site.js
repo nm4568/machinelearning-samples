@@ -114,15 +114,16 @@ function plotLineChart(data, key, chartTitle) {
         forecast,
         key);
 
-    var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ffcc33');
+    var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ccff00');
 
     var layout = {
+                   
         xaxis: {
             tickangle: 0,
             showgrid: false,
             showline: false,
             zeroline: false,
-            range: [trace_real.x.length - 120, trace_real.x.length] // was 12 beforen
+            range: [trace_real.x.minLength, trace_real.x.length] // was 12 beforen
 
         },
         yaxis: {
@@ -143,7 +144,6 @@ function plotLineChart(data, key, chartTitle) {
     };
 
     //populating the charts
-    debugger;
 
     Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], {}, { showSendToCloud: true });}
 
@@ -172,7 +172,7 @@ function TraceProductHistory(historyItems, key) {
         },
         text: texts,
         fill: 'tozeroy',
-        fillcolor: '#dd1828',
+        fillcolor: 'red',
         marker: {
             symbol: "circle",
             color: "white",
@@ -317,14 +317,19 @@ $(function () {
                         break;
                     case 4:
                     case 5:
-                    case 6:
                         key = 'riskImpactValue';
                         chartTitle = 'impact_lineChart'
                         break;
+                    case 6:
+                        key = 'riskImpactValue';
+                        chartTitle = 'impact_entity_lineChart'
+                        break;
                 }
 
-                if (index === 6) { return; }
+                /*
+                if (index === 7) { return; }
                 console.log(chartTitle + suffix);
+                */
 
                 plotLineChart(chartData, key, chartTitle + suffix);
             });
