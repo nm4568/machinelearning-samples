@@ -100,11 +100,17 @@ function plotLineChart(data, key, chartTitle) {
     var history = data[1];
     var forecast = 1;
     //updateProductStatistics(description, history.slice(history.length - 120), forecast);
-    var real = history.splice(0, 100);
-    var forecast = history.splice(0, 20);
+    var real = history.filter(function (element, index) {
+        if (index <= 100) {
+            return element;
+        }
+    });
+    var forecast = history.filter(function (element, index) {
+        if (index >= 100) {
+            return element;
+        }
+    });
     var trace_real = TraceProductHistory(real, key);
-
-    debugger;
     var trace_forecast = TraceProductForecast(
         forecast,
         forecast,
@@ -193,7 +199,9 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         x: $.map(labels, function (label) {
             return label.day;
         }),
-        text: [prev_text, `next_text`],
+        text: $.map(labels, function (label) {
+            return label[key];
+        }),
         mode: 'lines+markers',
         name: 'forecasting',
         hoveron: 'points',
