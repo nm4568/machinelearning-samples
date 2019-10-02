@@ -284,7 +284,7 @@ namespace eShopDashboard
                 risk.riskBase1.Add(new RiskBaseData
                 {
                     riskId = 2,
-                    day = -100 + i,
+                    day = i,
                     count = 100,
                     riskBaseValue = riskBaseValue1,
                     min = riskBaseValue1min,
@@ -294,7 +294,7 @@ namespace eShopDashboard
                 risk.riskImpact1.Add(new RiskImpactData
                 {
                     riskId = 2,
-                    day = -100 + i,
+                    day = i,
                     count = 100,
                     riskImpactValue = riskImpactValue1,
                     min = riskImpactValue1min,
@@ -304,7 +304,7 @@ namespace eShopDashboard
                 risk.risk2.Add(new RiskData
                 {
                     riskId = 1,
-                    day = -100 + i,
+                    day = i,
                     count = 100,
                     riskValue = riskValue2,
                     min = riskValue2min,
@@ -314,7 +314,7 @@ namespace eShopDashboard
                 risk.riskBase2.Add(new RiskBaseData
                 {
                     riskId = 2,
-                    day = -100 + i,
+                    day = i,
                     count = 100,
                     riskBaseValue = riskBaseValue2,
                     min = riskBaseValue2min,
@@ -324,7 +324,7 @@ namespace eShopDashboard
                 risk.riskImpact2.Add(new RiskImpactData
                 {
                     riskId = 2,
-                    day = -100 + i,
+                    day = i,
                     count = 100,
                     riskImpactValue = riskImpactValue2,
                     min = riskImpactValue2min,
@@ -334,7 +334,7 @@ namespace eShopDashboard
                 risk.riskImpactEntity.Add(new RiskImpactData
                 {
                     riskId = 2,
-                    day = -100 + i,
+                    day = i,
                     count = 100,
                     riskImpactValue = riskImpactEntityValue,
                     min = riskImpactEntityValuemin,
