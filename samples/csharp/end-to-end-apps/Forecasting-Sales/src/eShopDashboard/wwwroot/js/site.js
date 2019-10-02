@@ -146,7 +146,11 @@ function plotLineChart(forecast, history, description, price) {
         }
     };
 
-    Plotly.newPlot('lineChart', [trace_real, trace_forecast, trace_mean], layout);
+    //populating the charts
+
+    Plotly.newPlot('risk_lineChart', [trace_real, trace_forecast, trace_mean], layout);
+    Plotly.newPlot('base_lineChart', [trace_real, trace_forecast, trace_mean], layout);
+    Plotly.newPlot('impact_lineChart', [trace_real, trace_forecast, trace_mean], layout);
 }
 
 function TraceProductHistory(historyItems) {
