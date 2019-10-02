@@ -23,6 +23,7 @@ namespace eShopDashboard
     {
         private static int _seedingProgress = 100;
 
+        private static Random rnd = new Random(12345);
         private static RiskDTO risk =  new RiskDTO();
 
         public static IWebHost BuildWebHost(string[] args) =>
@@ -178,20 +179,53 @@ namespace eShopDashboard
             }
         }
 
+        public static void MoveByDay()
+        {
+            // Drop predicted
+            // Drop the oldest
+            // Shift the rest by one day to the past
+            // Invent today
+            // Insert predicted
+        }
+
         private static void PopulateRiskData()
         {
-            //var calculatedCount = MathF.Round(singleProductSeries.Select(p => p.count).Average()) - randomCountDelta;
-            //var calculatedMax = MathF.Round(singleProductSeries.Select(p => p.max).Average()) - randomMaxDelta;
-            //var calculatedMin = new Random().Next(1, 5);
+
+            float riskValue1lag = rnd.Next(0, 100);
+            float riskBaseValue1lag = rnd.Next(0, 100) / 10.0f;
+            float riskValue2lag = rnd.Next(0, 100);
+            float riskBaseValue2lag = rnd.Next(0, 100) / 10.0f;
 
             for (int i = 0; i < 100; i++)
             {
+                float riskValue1 = riskValue1lag + 0.03f * (rnd.Next(0, 100) - 50);
+                if (riskValue1 > 100f) riskValue1 = 100f;
+                if (riskValue1 < 0f) riskValue1 = 0f;
+
+                float riskBaseValue1 = riskBaseValue1lag + 0.01f * (rnd.Next(0, 100) - 50);
+                if (riskBaseValue1 > 10f) riskBaseValue1 = 10f;
+                if (riskBaseValue1 < 0f) riskBaseValue1 = 0f;
+
+                float riskValue2 = riskValue2lag + 0.03f * (rnd.Next(0, 100) - 50);
+                if (riskValue2 > 100f) riskValue2 = 100f;
+                if (riskValue2 < 0f) riskValue2 = 0f;
+
+                float riskBaseValue2 = riskBaseValue2lag + 0.01f * (rnd.Next(0, 100) - 50);
+                if (riskBaseValue2 > 10f) riskBaseValue2 = 10f;
+                if (riskBaseValue2 < 0f) riskBaseValue2 = 0f;
+
+
+                riskValue1lag = riskValue1;
+                riskBaseValue1lag = riskBaseValue1;
+                riskValue2lag = riskValue2;
+                riskBaseValue2lag = riskBaseValue2;
+
                 risk.risk1.Add(new RiskData
                 {
                     riskId = 1,
                     day = -100 + i,
                     count = 100,
-                    riskValue = new Random().Next(0, 100)
+                    riskValue = riskValue1
                 });
 
                 risk.riskBase1.Add(new RiskBaseData
@@ -199,7 +233,7 @@ namespace eShopDashboard
                     riskId = 2,
                     day = -100 + i,
                     count = 100,
-                    riskBaseValue = (new Random().Next(0, 100))/10.0f // $10M
+                    riskBaseValue = riskBaseValue1
                 });
 
                 risk.riskImpact1.Add(new RiskImpactData
@@ -207,7 +241,7 @@ namespace eShopDashboard
                     riskId = 2,
                     day = -100 + i,
                     count = 100,
-                    riskImpactValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                    riskImpactValue = riskValue1 * riskBaseValue1
                 });
 
                 risk.risk2.Add(new RiskData
@@ -215,7 +249,7 @@ namespace eShopDashboard
                     riskId = 1,
                     day = -100 + i,
                     count = 100,
-                    riskValue = new Random().Next(0, 100)
+                    riskValue = riskValue2
                 });
 
                 risk.riskBase2.Add(new RiskBaseData
@@ -223,7 +257,7 @@ namespace eShopDashboard
                     riskId = 2,
                     day = -100 + i,
                     count = 100,
-                    riskBaseValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                    riskBaseValue = riskBaseValue2
                 });
 
                 risk.riskImpact2.Add(new RiskImpactData
@@ -231,7 +265,7 @@ namespace eShopDashboard
                     riskId = 2,
                     day = -100 + i,
                     count = 100,
-                    riskImpactValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                    riskImpactValue = riskValue2 * riskBaseValue2
                 });
 
                 risk.riskImpactEntity.Add(new RiskImpactData
@@ -239,24 +273,26 @@ namespace eShopDashboard
                     riskId = 2,
                     day = -100 + i,
                     count = 100,
-                    riskImpactValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                    riskImpactValue = riskValue1 * riskBaseValue1 + riskValue2 * riskBaseValue2
                 });
 
             }
 
+            // Future
+
             for (int i = 0; i < 20; i++)
             {
-                float riskValue1 = new Random().Next(0, 100);
+                float riskValue1 = rnd.Next(0, 100);
                 float riskValue1min = riskValue1 - (i + 1);
                 float riskValue1max = riskValue1 + (i + 1);
-                float riskValue2 = new Random().Next(0, 100);
+                float riskValue2 = rnd.Next(0, 100);
                 float riskValue2min = riskValue2 - (i + 1);
                 float riskValue2max = riskValue2 + (i + 1);
 
-                float riskBaseValue1 = new Random().Next(0, 100) / 10.0f;
+                float riskBaseValue1 = rnd.Next(0, 100) / 10.0f;
                 float riskBaseValue1min = riskBaseValue1 - (i + 1) / 10.0f;
                 float riskBaseValue1max = riskBaseValue1 + (i + 1) / 10.0f;
-                float riskBaseValue2 = new Random().Next(0, 100) / 10.0f;
+                float riskBaseValue2 = rnd.Next(0, 100) / 10.0f;
                 float riskBaseValue2min = riskBaseValue2 - (i + 1) / 10.0f;
                 float riskBaseValue2max = riskBaseValue2 + (i + 1) / 10.0f;
 
