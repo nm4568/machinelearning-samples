@@ -119,7 +119,7 @@ function plotLineChart(data, key, chartTitle) {
             showgrid: false,
             showline: false,
             zeroline: false,
-            range: [trace_real.x.length - 10, trace_real.x.length] // was 12 beforen
+            range: [trace_real.x.length - 120, trace_real.x.length] // was 12 beforen
 
         },
         yaxis: {
@@ -138,10 +138,22 @@ function plotLineChart(data, key, chartTitle) {
             x: 0.85
         }
     };
+    var trace1 = {
+        x: [-100, -99, -98, -97],
+        y: [10, 15, 13, 11.4599981],
+        type: 'scatter',
+    };
 
+    var trace2 = {
+        x: [1, 2, 3, 4],
+        y: [16, 5, 11, 9],
+        type: 'scatter'
+    };
+
+    var data = [trace1, trace2];
     //populating the charts
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], layout);
-}
+    debugger;
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], {}, { showSendToCloud: true });}
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
@@ -171,8 +183,8 @@ function TraceProductHistory(historyItems, key) {
         fillcolor: '#dd1828',
         marker: {
             symbol: "circle",
-            color: "cyan",
-            size: 12,
+            color: "white",
+            size: 10,
             line: {
                 color: "black",
                 width: 3
@@ -206,10 +218,10 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         marker: {
             symbol: "circle",
             color: "white",
-            size: 7,
+            size: 10,
             line: {
                 color: "black",
-                width: 2
+                width: 3
             }
         }
     };
@@ -476,7 +488,10 @@ $(function () {
                         chartTitle = 'impact_lineChart'
                         break;
                 }
-                debugger;
+
+                if (index === 6) { return; }
+                console.log(chartTitle + suffix);
+
                 plotLineChart(chartData, key, chartTitle + suffix);
             });
         });
