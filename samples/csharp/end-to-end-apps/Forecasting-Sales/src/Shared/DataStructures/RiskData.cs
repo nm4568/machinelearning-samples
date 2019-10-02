@@ -7,13 +7,13 @@ namespace eShopForecast
 {
     public class RiskDTO
     {
-        public List<RiskData> risk1;
-        public List<RiskData> risk2;
-        public List<RiskBaseData> riskBase1;
-        public List<RiskBaseData> riskBase2;
-        public List<RiskImpactData> riskImpact1;
-        public List<RiskImpactData> riskImpact2;
-        public List<RiskImpactData> riskImpactEntity;
+        public List<RiskData> risk1 = new List<RiskData>();
+        public List<RiskData> risk2 = new List<RiskData>();
+        public List<RiskBaseData> riskBase1 = new List<RiskBaseData>();
+        public List<RiskBaseData> riskBase2 = new List<RiskBaseData>();
+        public List<RiskImpactData> riskImpact1 = new List<RiskImpactData>();
+        public List<RiskImpactData> riskImpact2 = new List<RiskImpactData>();
+        public List<RiskImpactData> riskImpactEntity = new List<RiskImpactData>();
     }
 
     public class RiskData
