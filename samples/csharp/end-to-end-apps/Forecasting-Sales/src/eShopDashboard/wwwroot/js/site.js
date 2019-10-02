@@ -101,6 +101,7 @@ function getStats(productId) {
 }
 
 function plotLineChart(forecast, history, description, price) {
+    debugger;
     for(i = 0; i < history.length; i++) {
         history[i].sales = history[i].units * price;
     }
