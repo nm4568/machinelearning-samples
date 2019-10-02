@@ -100,11 +100,17 @@ function plotLineChart(data, key, chartTitle) {
     var history = data[1];
     var forecast = 1;
     //updateProductStatistics(description, history.slice(history.length - 120), forecast);
-    var real = history.splice(0, 100);
-    var forecast = history.splice(0, 20);
+    var real = history.filter(function (element, index) {
+        if (index <= 100) {
+            return element;
+        }
+    });
+    var forecast = history.filter(function (element, index) {
+        if (index >= 100) {
+            return element;
+        }
+    });
     var trace_real = TraceProductHistory(real, key);
-
-    debugger;
     var trace_forecast = TraceProductForecast(
         forecast,
         forecast,
@@ -113,6 +119,22 @@ function plotLineChart(data, key, chartTitle) {
         trace_real.y,
         forecast,
         key);
+    var trace_forecast_min = TraceProductForecast(
+        forecast,
+        forecast,
+        history[history.length - 1],
+        trace_real.text[trace_real.text.length - 1],
+        trace_real.y,
+        forecast,
+        'min');
+    var trace_forecast_max = TraceProductForecast(
+        forecast,
+        forecast,
+        history[history.length - 1],
+        trace_real.text[trace_real.text.length - 1],
+        trace_real.y,
+        forecast,
+        'max');
 
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ccff00');
 
@@ -145,7 +167,7 @@ function plotLineChart(data, key, chartTitle) {
 
     //populating the charts
 
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], {}, { showSendToCloud: true });}
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_forecast_min, trace_forecast_max, trace_mean], {}, { showSendToCloud: true });}
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
@@ -193,7 +215,9 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         x: $.map(labels, function (label) {
             return label.day;
         }),
-        text: [prev_text, `next_text`],
+        text: $.map(labels, function (label) {
+            return label[key];
+        }),
         mode: 'lines+markers',
         name: 'forecasting',
         hoveron: 'points',
