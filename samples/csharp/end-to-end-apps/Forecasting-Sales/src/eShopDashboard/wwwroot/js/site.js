@@ -171,8 +171,8 @@ function TraceProductHistory(historyItems, key) {
             }
         },
         text: texts,
-        fill: 'tozeroy',
-        fillcolor: 'red',
+       // fill: 'tozeroy',
+        //fillcolor: 'red',
         marker: {
             symbol: "circle",
             color: "white",
@@ -210,8 +210,8 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
             shape: 'spline',
             color: '#00A69C'
         },
-        fill: 'tozeroy',
-        fillcolor: '#00A69C',
+        //fill: 'tozeroy',
+        //fillcolor: '#00A69C',
         marker: {
             symbol: "circle",
             color: "white",
