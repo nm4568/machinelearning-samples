@@ -172,7 +172,7 @@ function TraceProductHistory(historyItems, key) {
         },
         text: texts,
        // fill: 'tozeroy',
-        //fillcolor: 'red',
+        // fillcolor: 'red',
         marker: {
             symbol: "circle",
             color: "white",
