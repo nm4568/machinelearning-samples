@@ -119,6 +119,22 @@ function plotLineChart(data, key, chartTitle) {
         trace_real.y,
         forecast,
         key);
+    var trace_forecast_min = TraceProductForecast(
+        forecast,
+        forecast,
+        history[history.length - 1],
+        trace_real.text[trace_real.text.length - 1],
+        trace_real.y,
+        forecast,
+        'min');
+    var trace_forecast_max = TraceProductForecast(
+        forecast,
+        forecast,
+        history[history.length - 1],
+        trace_real.text[trace_real.text.length - 1],
+        trace_real.y,
+        forecast,
+        'max');
 
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ccff00');
 
@@ -151,7 +167,7 @@ function plotLineChart(data, key, chartTitle) {
 
     //populating the charts
 
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], {}, { showSendToCloud: true });}
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_forecast_min, trace_forecast_max, trace_mean], {}, { showSendToCloud: true });}
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
