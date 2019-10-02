@@ -1,6 +1,7 @@
 ﻿using eShopDashboard.Infrastructure.Data.Catalog;
 using eShopDashboard.Infrastructure.Data.Ordering;
 using eShopDashboard.Infrastructure.Setup;
+using eShopForecast;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -20,6 +22,8 @@ namespace eShopDashboard
     public class Program
     {
         private static int _seedingProgress = 100;
+
+        private static RiskDTO risk =  new RiskDTO();
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
@@ -56,6 +60,8 @@ namespace eShopDashboard
                 Log.Information("----- Seeding Database");
 
                 Task seeding = Task.Run(async () => { await ConfigureDatabaseAsync(host); });
+
+                PopulateRiskData();
 
                 Log.Information("----- Running Host");
 
@@ -171,5 +177,174 @@ namespace eShopDashboard
                 Log.Error(ex, "----- Exception seeding database");
             }
         }
+
+        private static void PopulateRiskData()
+        {
+            //var calculatedCount = MathF.Round(singleProductSeries.Select(p => p.count).Average()) - randomCountDelta;
+            //var calculatedMax = MathF.Round(singleProductSeries.Select(p => p.max).Average()) - randomMaxDelta;
+            //var calculatedMin = new Random().Next(1, 5);
+
+            for (int i = 0; i < 100; i++)
+            {
+                risk.risk1.Add(new RiskData
+                {
+                    riskId = 1,
+                    day = -100 + i,
+                    count = 100,
+                    riskValue = new Random().Next(0, 100)
+                });
+
+                risk.riskBase1.Add(new RiskBaseData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskBaseValue = (new Random().Next(0, 100))/10.0f // $10M
+                });
+
+                risk.riskImpact1.Add(new RiskImpactData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskImpactValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                });
+
+                risk.risk2.Add(new RiskData
+                {
+                    riskId = 1,
+                    day = -100 + i,
+                    count = 100,
+                    riskValue = new Random().Next(0, 100)
+                });
+
+                risk.riskBase2.Add(new RiskBaseData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskBaseValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                });
+
+                risk.riskImpact2.Add(new RiskImpactData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskImpactValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                });
+
+                risk.riskImpactEntity.Add(new RiskImpactData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskImpactValue = (new Random().Next(0, 100)) / 10.0f // $10M
+                });
+
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                float riskValue1 = new Random().Next(0, 100);
+                float riskValue1min = riskValue1 - (i + 1);
+                float riskValue1max = riskValue1 + (i + 1);
+                float riskValue2 = new Random().Next(0, 100);
+                float riskValue2min = riskValue2 - (i + 1);
+                float riskValue2max = riskValue2 + (i + 1);
+
+                float riskBaseValue1 = new Random().Next(0, 100) / 10.0f;
+                float riskBaseValue1min = riskBaseValue1 - (i + 1) / 10.0f;
+                float riskBaseValue1max = riskBaseValue1 + (i + 1) / 10.0f;
+                float riskBaseValue2 = new Random().Next(0, 100) / 10.0f;
+                float riskBaseValue2min = riskBaseValue2 - (i + 1) / 10.0f;
+                float riskBaseValue2max = riskBaseValue2 + (i + 1) / 10.0f;
+
+                float riskImpactValue1 = riskValue1 * riskBaseValue1;
+                float riskImpactValue1min = riskValue1min * riskBaseValue1min;
+                float riskImpactValue1max = riskValue1max * riskBaseValue1max;
+                float riskImpactValue2 = riskValue2 * riskBaseValue2;
+                float riskImpactValue2min = riskValue2min * riskBaseValue2min;
+                float riskImpactValue2max = riskValue2max * riskBaseValue2max;
+
+                float riskImpactEntityValue = riskImpactValue1 + riskImpactValue2;
+                float riskImpactEntityValuemin = riskImpactValue1min + riskImpactValue2max;
+                float riskImpactEntityValuemax = riskImpactValue1max + riskImpactValue2max;
+
+                risk.risk1.Add(new RiskData
+                {
+                    riskId = 1,
+                    day = i,
+                    count = 100,
+                    riskValue = riskValue1,
+                    min = riskValue1min,
+                    max = riskValue1max
+                });
+
+                risk.riskBase1.Add(new RiskBaseData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskBaseValue = riskBaseValue1,
+                    min = riskBaseValue1min,
+                    max = riskBaseValue1max
+                });
+
+                risk.riskImpact1.Add(new RiskImpactData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskImpactValue = riskImpactValue1,
+                    min = riskImpactValue1min,
+                    max = riskImpactValue1max
+                });
+
+                risk.risk2.Add(new RiskData
+                {
+                    riskId = 1,
+                    day = -100 + i,
+                    count = 100,
+                    riskValue = riskValue2,
+                    min = riskValue2min,
+                    max = riskValue2max
+                });
+
+                risk.riskBase2.Add(new RiskBaseData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskBaseValue = riskBaseValue2,
+                    min = riskBaseValue2min,
+                    max = riskBaseValue2max
+                });
+
+                risk.riskImpact2.Add(new RiskImpactData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskImpactValue = riskImpactValue2,
+                    min = riskImpactValue2min,
+                    max = riskImpactValue2max
+                });
+
+                risk.riskImpactEntity.Add(new RiskImpactData
+                {
+                    riskId = 2,
+                    day = -100 + i,
+                    count = 100,
+                    riskImpactValue = riskImpactEntityValue,
+                    min = riskImpactEntityValuemin,
+                    max = riskImpactEntityValuemax
+                });
+
+            }
+        }
+
+        public static RiskDTO GetRiskData()
+            => risk;
     }
 }
