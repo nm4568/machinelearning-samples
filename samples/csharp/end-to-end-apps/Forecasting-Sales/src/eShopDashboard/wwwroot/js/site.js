@@ -100,16 +100,19 @@ function plotLineChart(data, key, chartTitle) {
     var history = data[1];
     var forecast = 1;
     //updateProductStatistics(description, history.slice(history.length - 120), forecast);
+    var real = history.splice(0, 100);
+    var forecast = history.splice(0, 20);
+    var trace_real = TraceProductHistory(real, key);
 
-    var trace_real = TraceProductHistory(history, key);
-
+    debugger;
     var trace_forecast = TraceProductForecast(
-        trace_real.x,
-        nextMonth(history[history.length - 1]),
-        nextFullMonth(history[history.length - 1]),
+        forecast,
+        forecast,
+        history[history.length - 1],
         trace_real.text[trace_real.text.length - 1],
         trace_real.y,
-        forecast);
+        forecast,
+        key);
 
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ffcc33');
 
@@ -138,21 +141,10 @@ function plotLineChart(data, key, chartTitle) {
             x: 0.85
         }
     };
-    var trace1 = {
-        x: [-100, -99, -98, -97],
-        y: [10, 15, 13, 11.4599981],
-        type: 'scatter',
-    };
 
-    var trace2 = {
-        x: [1, 2, 3, 4],
-        y: [16, 5, 11, 9],
-        type: 'scatter'
-    };
-
-    var data = [trace1, trace2];
     //populating the charts
     debugger;
+
     Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], {}, { showSendToCloud: true });}
 
 function TraceProductHistory(historyItems, key) {
@@ -193,11 +185,16 @@ function TraceProductHistory(historyItems, key) {
     };
 }
 
-function TraceProductForecast(labels, next_x_label, next_text, prev_text, values, forecast) {
+function TraceProductForecast(labels, next_x_label, next_text, prev_text, values, forecast, key) {
+    debugger;
     return {
-        x: [labels[labels.length - 1], next_x_label],
-        y: [values[values.length - 1], forecast],
-        text: [prev_text, `${next_text}<br><b>${forecast.toCurrencyLocaleString()}</b>`],
+        y: $.map(labels, function (label) {
+            return label[key];
+        }),
+        x: $.map(labels, function (label) {
+            return label.day;
+        }),
+        text: [prev_text, `next_text`],
         mode: 'lines+markers',
         name: 'forecasting',
         hoveron: 'points',
@@ -242,178 +239,15 @@ function TraceMean(labels, values, color) {
     };
 }
 
-function nextMonth(predictor) {
-    if (predictor.month === 12)
-        return `${months[1]}<br>${predictor.year + 1}`;
-    else
-        return `${months[predictor.month + 1]}<br>${predictor.year}`;
-}
-
-function nextFullMonth(predictor, includeYear = false) {
-    if (predictor.month === 12)
-        return `${full_months[1]}`;
-    else
-        return `${full_months[predictor.month + 1]}${includeYear ? ' ' + predictor.year : ''}`;
-}
 
 function onLoadCountryForecasting() {
     setResponsivePlots();
     $("footer").addClass("sticky");
 }
-
-
-// COUNTRY FORECASTING
-
-function getCountryData(country) {
-    $.getJSON(`${apiUri.ordering}/country/${country}/history`)
-        .done(function (history) {
-            if (history.length < 4) return;
-            $.when(
-                getCountryForecast(history[history.length - 1])
-            ).done(function (forecast) {
-                plotLineChartCountry(forecast, history, country);
-            });
-        });
-}
-
-function getCountryForecast(st) {
-    // next,country,year,month,max,min,std,count,sales,med,prev
-    var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&prev=${st.prev}&count=${st.count}&med=${st.med}&sales=${st.sales}&std=${st.std}`;
-    var fullUrl = `${apiUri.countrysalesforecast}/country/${st.country}/salesforecast${surl}`;
-    return $.getJSON(fullUrl);
-}
-
-function plotLineChartCountry(forecast, historyItems, country) {
-    forecast = Math.pow(10,forecast);
-
-    $("footer").removeClass("sticky");
-    updateCountryStatistics(country, historyItems.slice(historyItems.length - 12), forecast);
-
-    var trace_real = getTraceCountryHistory(historyItems);
-
-    var trace_forecast = getTraceCountryForecast(
-        trace_real.x,
-        nextMonth(historyItems[historyItems.length - 1]),
-        nextFullMonth(historyItems[historyItems.length - 1]),
-        trace_real.text[trace_real.text.length - 1],
-        trace_real.y,
-        forecast);
-
-    var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#999999');
-
-    var layout = {
-        xaxis: {
-            tickangle: 0,
-            showgrid: false,
-            showline: false,
-            zeroline: false,
-            range: [trace_real.x.length - 12, trace_real.x.length]
-        },
-        yaxis: {
-            showgrid: false,
-            showline: false,
-            zeroline: false,
-            tickformat: '$,.0'
-        },
-        //dragmode: 'pan',
-        hovermode: "closest",
-        legend: {
-            orientation: "h",
-            xanchor: "center",
-            yanchor: "top",
-            y: 1.2,
-            x: 0.85
-        }
-    };
-
-    Plotly.newPlot('lineChart', [trace_real, trace_forecast, trace_mean], layout);
-}
-
-function getTraceCountryHistory(historyItems) {
-    var y = $.map(historyItems, function (d) { return d.sales; });
-    var x = $.map(historyItems, function (d) { return `${months[d.month]}<br>${d.year}`; });
-    var texts = $.map(historyItems, function (d) { return `${full_months[d.month]}<br><b>${d.sales.toCurrencyLocaleString()}</b>`; });
-
-    return {
-        x: x,
-        y: y,
-        mode: 'lines+markers',
-        name: 'history',
-        line: {
-            shape: 'spline',
-            color: '#ffb131'
-        },
-        hoveron: 'points',
-        hoverinfo: 'text',
-        hoverlabel: {
-            bgcolor: '#333333',
-            bordercolor: '#333333',
-            font: {
-                color: 'white'
-            }
-        },
-        text: texts,
-        fill: 'tozeroy',
-        fillcolor: '#ffb131',
-        marker: {
-            symbol: "circle",
-            color: "white",
-            size: 10,
-            line: {
-                color: "black",
-                width: 3
-            }
-        }
-    };
-}
-
-function getTraceCountryForecast(labels, next_y_label, next_text, prev_text, values, forecast) {
-    return {
-        x: [labels[labels.length - 1], next_y_label],
-        y: [values[values.length - 1], forecast],
-        text: [prev_text, `${next_text}<br><b>${forecast.toCurrencyLocaleString()}</b>`],
-        mode: 'lines+markers',
-        name: 'forecasting',
-        hoveron: 'points',
-        hoverinfo: 'text',
-        hoverlabel: {
-            bgcolor: '#333333',
-            bordercolor: '#333333',
-            font: {
-                color: 'white'
-            }
-        },
-        line: {
-            shape: 'spline',
-            color: '#00A69C'
-        },
-        fill: 'tozeroy',
-        fillcolor: '#00A69C',
-        marker: {
-            symbol: "circle",
-            color: "white",
-            size: 10,
-            line: {
-                color: "black",
-                width: 3
-            }
-        }
-    };
-}
-
 function updateProductStatistics(product, historyItems, forecasting) {
     showStatsLayers();
 
     //populateForecastDashboard(product, historyItems, forecasting);
-    populateHistoryTable(historyItems);
-
-    refreshHeightSidebar();
-}
-
-function updateCountryStatistics(country, historyItems, forecasting) {
-    showStatsLayers();
-
-    //populateForecastDashboard(country, historyItems, forecasting);
     populateHistoryTable(historyItems);
 
     refreshHeightSidebar();
