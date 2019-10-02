@@ -186,7 +186,6 @@ function TraceProductHistory(historyItems, key) {
 }
 
 function TraceProductForecast(labels, next_x_label, next_text, prev_text, values, forecast, key) {
-    debugger;
     return {
         y: $.map(labels, function (label) {
             return label[key];
