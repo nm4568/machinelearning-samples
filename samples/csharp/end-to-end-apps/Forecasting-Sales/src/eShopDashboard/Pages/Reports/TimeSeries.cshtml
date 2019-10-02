@@ -1,7 +1,7 @@
 ﻿@page
 @model eShopDashboard.Pages.Reports.TimeSeriesModel
 @{
-    ViewData["Title"] = "Time Series Sales Forecast";
+    ViewData["Title"] = "Time Series Forecast";
 }
 
 @if (Program.GetSeedingProgress() < 100)
@@ -14,13 +14,6 @@
         @ViewData["Title"]
     </div>
 </div>
-<div class="row my-4">
-    <div class="col" id="remote">
-        <input class="typeahead w-100" type="text" placeholder="Type a product">
-    </div>
-    <div class="w-100 mx-3 border-bottom-highlight"></div>
-</div>
-
 <div id="product" class="row my-3 align-items-center justify-content-center d-none">
     <div class="col offset-1 col-sm-4 offset-sm-0">
         <b id="productName" class="" style="font-size: 14pt;"></b><br />
@@ -33,46 +26,12 @@
 
 <div id="plot" class="row my-4 d-none">
     <div class="col pl-md-4" style="font-size: 12pt">
-        <span id="labelItem" class="font-weight-bold"></span> - Sales Forecast Prediction (Next month)
+        <span id="labelItem" class="font-weight-bold"></span> - Forecast Prediction (Next 20 days)
     </div>
     <div class="w-100 mx-3 border-bottom-highlight"></div>
     <div id="lineChart" class="col-12 col-sm-11 col-md-10 my-2 mx-auto responsive-plot" style="height: 355px;">
     </div>
 </div>
-
-<div id="tableHeader" class="row mt-4 d-none">
-    <div class="col pl-md-4" style="font-size: 12pt">
-        <span class="font-weight-bold" id="tableHeaderCaption">Sales month / $</span>
-    </div>
-    <div class="w-100 mx-3 border-bottom-highlight"></div>
-</div>
-
-<div id="tableHistory" class="row mb-5 d-none">
-    <div class="offset-1 col-10 offset-md-2 col-md-4 mb-5 mb-md-0" style="">
-        <div id="historyTable" class="row" style="font-size: 8pt; margin-top: 12px;">
-        </div>
-    </div>
-    <div class="offset-1 col-10 offset-md-2 col-md-3" style="font-size: 14pt; line-height: 1">
-        <div class="row h-100 align-items-center justify-content-center">
-            <div class="col-5 col-md" style="line-height: 1.2">
-                <div class="mt-0">
-                    <span class="text-nowrap">Total</span><br />
-                    <span id="labelTotal" class="text-nowrap" style="font-size: 13pt;"></span><br />
-                    <span id="valueTotal" class="font-weight-bold" style="font-size: 27pt;">
-                        11.426.930
-                    </span>
-                </div>
-                <div class="mt-5">
-                    <span class="font-weight-bold">Forecast</span><br />
-                    <span id="labelForecast" class="text-nowrap" style="font-size: 13pt;"></span><br />
-                    <span id="valueForecast" class="font-weight-bold es-color" style="font-size: 26pt;"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 
 @section Scripts {
     <script src="~/lib/js/typeahead.bundle.js"></script>

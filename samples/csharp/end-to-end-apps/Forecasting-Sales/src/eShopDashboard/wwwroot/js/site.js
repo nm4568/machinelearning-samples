@@ -456,3 +456,15 @@ Number.prototype.toNumberLocaleString = function toNumberLocaleString() {
     var currentLocale = navigator.languages ? navigator.languages[0] : navigator.language;
     return this.toLocaleString(currentLocale, { useGrouping: true }) + " units";
 };
+
+$(function () {
+    getHistory(261)
+        .done(function (history) {
+            if (history.length < 4) return;
+            $.when(
+                getForecast(history[history.length - 1], "TimeSeries")
+            ).done(function (forecast) {
+                plotLineChart(forecast, history, "Security Breach", 1.00);
+            });
+        });
+});
