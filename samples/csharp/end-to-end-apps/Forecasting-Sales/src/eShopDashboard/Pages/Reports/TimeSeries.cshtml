@@ -9,13 +9,15 @@
     @await Html.PartialAsync("_Seeding.cshtml")
 }
 
-<div class="row d-md-inline">
-    <div class="col-12 bg-highlight py-3 pl-md-4" style="color: white; font-size: 17pt; line-height: 1.25">
-        @ViewData["Title"]
+<div style="width:100%">
+    <div class="row">
+        <div class="col-12 bg-highlight py-3 pl-md-4" style="color: white; font-size: 17pt; line-height: 1.25">
+            @ViewData["Title"]
+        </div>
     </div>
 </div>
 
-<div style="padding:0 0 0 0">
+<div id="d_risk1" style="padding:0 0 0 0">
 
     <div style="width:33.0%" class="d-inline-block">
 
@@ -24,7 +26,7 @@
                 <span id="labelItem" class="font-weight-bold"></span> - Probability Risk (Next 20 days)
             </div>
             <div class="w-100 border-bottom-highlight"></div>
-            <div id="risk_lineChart" class="responsive-plot" style="height: 355px;">
+            <div id="risk_lineChart_1" class="responsive-plot" style="height: 355px;">
             </div>
         </div>
     </div>
@@ -33,10 +35,10 @@
 
         <div id="money_base">
             <div class="pl-md-4" style="font-size: 12pt">
-                <span id="labelItem" class="font-weight-bold"></span>  Monetary (Next 20 days)
+                <span id="labelItem" class="font-weight-bold"></span>  - Monetary (Next 20 days)
             </div>
             <div class="w-100 border-bottom-highlight"></div>
-            <div id="base_lineChart" class="responsive-plot" style="height: 355px;">
+            <div id="base_lineChart_1" class="responsive-plot" style="height: 355px;">
             </div>
         </div>
 
@@ -48,13 +50,62 @@
                 <span id="labelItem" class="font-weight-bold"></span> - Impact (Next 20 days)
             </div>
             <div class="w-100 border-bottom-highlight"></div>
-            <div id="impact_lineChart" class="responsive-plot" style="height: 355px;">
+            <div id="impact_lineChart_1" class="responsive-plot" style="height: 355px;">
             </div>
         </div>
     </div>
 
 </div>
 
+
+
+<div style="width:100%">
+    <div class="row">
+        <div class="col-12 bg-highlight py-3 pl-md-4" style="color: white; font-size: 17pt; line-height: 1.25">
+            @ViewData["Title"]
+        </div>
+    </div>
+</div>
+
+<div id="d_risk1" style="padding:0 0 0 0">
+
+    <div style="width:33.0%" class="d-inline-block">
+
+        <div id="risk_details_2">
+            <div class="pl-md-4" style="font-size: 12pt">
+                <span id="labelItem" class="font-weight-bold"></span> - Probability Risk (Next 20 days)
+            </div>
+            <div class="w-100 border-bottom-highlight"></div>
+            <div id="risk_lineChart_2" class="responsive-plot" style="height: 355px;">
+            </div>
+        </div>
+    </div>
+
+    <div style="width:33.0%" class="d-inline-block">
+
+        <div id="money_base_2">
+            <div class="pl-md-4" style="font-size: 12pt">
+                <span id="labelItem" class="font-weight-bold"></span>  - Monetary (Next 20 days)
+            </div>
+            <div class="w-100 border-bottom-highlight"></div>
+            <div id="base_lineChart_2" class="responsive-plot" style="height: 355px;">
+            </div>
+        </div>
+
+    </div>
+
+    <div style="width:33.0%" class="d-inline-block">
+        <div id="impact_2">
+            <div class="pl-md-4" style="font-size: 12pt">
+                <span id="labelItem" class="font-weight-bold"></span> - Impact (Next 20 days)
+            </div>
+            <div class="w-100 border-bottom-highlight"></div>
+            <div id="impact_lineChart_2" class="responsive-plot" style="height: 355px;">
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 

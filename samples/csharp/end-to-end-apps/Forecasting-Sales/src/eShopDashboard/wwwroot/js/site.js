@@ -122,14 +122,40 @@ function plotLineChart(forecast, history, description, price) {
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ffcc33');
 
     var layout = {
+        title: {
+            text: 'Plot Title',
+            font: {
+                family: 'Courier New, monospace',
+                size: 24
+            },
+            xref: 'paper',
+            x: 0.05,
+        },
         xaxis: {
             tickangle: 0,
             showgrid: false,
             showline: false,
             zeroline: false,
-            range: [trace_real.x.length - 12, trace_real.x.length]
+            title: {
+                text: 'x Axis',
+                font: {
+                    family: 'Arial',
+                    size: 18,
+                    color: '#7f7f7f'
+                }
+            },
+            range: [trace_real.x.length - 10, trace_real.x.length] // was 12 beforen
+
         },
         yaxis: {
+            title: {
+                text: 'x Axis',
+                font: {
+                    family: 'Courier New, monospace',
+                    size: 15,
+                    color: '#7f7f7f'
+                }
+            },
             showgrid: false,
             showline: false,
             zeroline: false,
@@ -181,8 +207,8 @@ function TraceProductHistory(historyItems) {
         fillcolor: '#dd1828',
         marker: {
             symbol: "circle",
-            color: "white",
-            size: 10,
+            color: "cyan",
+            size: 12,
             line: {
                 color: "black",
                 width: 3
@@ -216,10 +242,10 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         marker: {
             symbol: "circle",
             color: "white",
-            size: 10,
+            size: 7,
             line: {
                 color: "black",
-                width: 3
+                width: 2
             }
         }
     };
@@ -468,7 +494,7 @@ $(function () {
             $.when(
                 getForecast(history[history.length - 1], "TimeSeries")
             ).done(function (forecast) {
-                plotLineChart(forecast, history, "Security Breach", 1.00);
+                plotLineChart(forecast, history, "", 1.00); // Security Breach was a 3 parameter 
             });
         });
 });
