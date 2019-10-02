@@ -83,33 +83,25 @@ function getProductData(product, page) {
         });
 }
 
-function getForecast(st, page) {
-    if (page === "TimeSeries") {
-        return $.getJSON(`${apiUri.timeseriesforcasting}/product/${st.productId}/unittimeseriesestimation`);
-    } else {
-        var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&count=${st.count}&prev=${st.prev}&units=${st.units}`;
-        return $.getJSON(`${apiUri.forecasting}/product/${st.productId}/unitdemandestimation${surl}`);
-    }
-}
-
-function getHistory(productId) {
-    return $.getJSON(`${apiUri.ordering}/product/${productId}/history`);
+    function getHistory() {
+    return $.getJSON(`${window.location.origin}/risk`);
 }
 
 function getStats(productId) {
     return $.getJSON(`${apiUri.ordering}/product/${productId}/stats`);
 }
 
-function plotLineChart(forecast, history, description, price) {
-    for(i = 0; i < history.length; i++) {
-        history[i].sales = history[i].units * price;
-    }
-    forecast *= price;
+function plotLineChart(data, key, chartTitle) {
+    //for(i = 0; i < history.length; i++) {
+    //    history[i].sales = history[i].units * price;
+    //}
+    //forecast *= price;
+    var description = data[0];
+    var history = data[1];
+    var forecast = 1;
+    //updateProductStatistics(description, history.slice(history.length - 120), forecast);
 
-    $("footer").removeClass("sticky");
-    updateProductStatistics(description, history.slice(history.length - 12), forecast);
-
-    var trace_real = TraceProductHistory(history);
+    var trace_real = TraceProductHistory(history, key);
 
     var trace_forecast = TraceProductForecast(
         trace_real.x,
@@ -147,16 +139,13 @@ function plotLineChart(forecast, history, description, price) {
     };
 
     //populating the charts
-
-    Plotly.newPlot('risk_lineChart', [trace_real, trace_forecast, trace_mean], layout);
-    Plotly.newPlot('base_lineChart', [trace_real, trace_forecast, trace_mean], layout);
-    Plotly.newPlot('impact_lineChart', [trace_real, trace_forecast, trace_mean], layout);
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_mean], layout);
 }
 
-function TraceProductHistory(historyItems) {
-    var y = $.map(historyItems, function (d) { return d.sales; });
-    var x = $.map(historyItems, function (d) { return `${months[d.month]}<br>${d.year}`; });
-    var texts = $.map(historyItems, function (d) { return `${full_months[d.month]}<br><b>${d.sales.toCurrencyLocaleString()}</b>`; });
+function TraceProductHistory(historyItems, key) {
+    var y = $.map(historyItems, function (d) { return d[key]; });
+    var x = $.map(historyItems, function (d) { return d.day; });
+    var texts = $.map(historyItems, function (d) { return d[key]; });
 
     return {
         x: x,
@@ -402,7 +391,7 @@ function getTraceCountryForecast(labels, next_y_label, next_text, prev_text, val
 function updateProductStatistics(product, historyItems, forecasting) {
     showStatsLayers();
 
-    populateForecastDashboard(product, historyItems, forecasting);
+    //populateForecastDashboard(product, historyItems, forecasting);
     populateHistoryTable(historyItems);
 
     refreshHeightSidebar();
@@ -411,7 +400,7 @@ function updateProductStatistics(product, historyItems, forecasting) {
 function updateCountryStatistics(country, historyItems, forecasting) {
     showStatsLayers();
 
-    populateForecastDashboard(country, historyItems, forecasting);
+    //populateForecastDashboard(country, historyItems, forecasting);
     populateHistoryTable(historyItems);
 
     refreshHeightSidebar();
@@ -422,11 +411,11 @@ function showStatsLayers() {
 }
 
 function populateForecastDashboard(country, historyItems, forecasting, units = false) {
-    var lastyear = historyItems[historyItems.length - 1].year;
-    var values = historyItems.map(y => y.year === lastyear ? y.sales : 0);
+    var lastday = historyItems[historyItems.length - 1].day;
+    var values = historyItems.map(y => y.year === lastday ? y.sales : 0);
     var total = values.reduce((previous, current) => current += previous);
 
-    $("#labelTotal").text(`${lastyear} sales`);
+    $("#labelTotal").text(`${lastday} sales`);
     $("#valueTotal").text(units ? total.toNumberLocaleString() : total.toCurrencyLocaleString());
     $("#labelForecast").text(`${nextFullMonth(historyItems[historyItems.length - 1], true).toLowerCase()} sales`);
     $("#valueForecast").text(units ? forecasting.toNumberLocaleString() : forecasting.toCurrencyLocaleString());
@@ -462,13 +451,33 @@ Number.prototype.toNumberLocaleString = function toNumberLocaleString() {
 };
 
 $(function () {
-    getHistory(261)
-        .done(function (history) {
-            if (history.length < 4) return;
-            $.when(
-                getForecast(history[history.length - 1], "TimeSeries")
-            ).done(function (forecast) {
-                plotLineChart(forecast, history, "Security Breach", 1.00);
+    getHistory()
+        .done(function (data, index) {
+            Object.entries(data).forEach(function (chartData, index) {
+                var key = '';
+                var chartTitle = '';
+                var suffix = index % 2 ? '_0' : '_1';
+                switch (index) {
+                    case 0:
+                    case 1:
+                        key = 'riskValue';
+                        chartTitle = 'risk_lineChart'
+                        break;
+                    case 2:
+                    case 3:
+                        key = 'riskBaseValue';
+                        chartTitle = 'base_lineChart'
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                        key = 'riskImpactValue';
+                        chartTitle = 'impact_lineChart'
+                        break;
+                }
+                debugger;
+                plotLineChart(chartData, key, chartTitle + suffix);
             });
         });
 });
+
