@@ -171,15 +171,15 @@ function TraceProductHistory(historyItems, key) {
             }
         },
         text: texts,
-        fill: 'tozeroy',
-        fillcolor: 'red',
+       // fill: 'tozeroy',
+        // fillcolor: 'red',
         marker: {
             symbol: "circle",
             color: "white",
-            size: 10,
+            size: 3,
             line: {
                 color: "black",
-                width: 3
+                width: 1
             }
         }
     };
@@ -209,15 +209,15 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
             shape: 'spline',
             color: '#00A69C'
         },
-        fill: 'tozeroy',
-        fillcolor: '#00A69C',
+        // fill: 'tozeroy',
+        // fillcolor: '#00A69C',
         marker: {
             symbol: "circle",
             color: "white",
-            size: 10,
+            size: 3,
             line: {
                 color: "black",
-                width: 3
+                width: 1
             }
         }
     };

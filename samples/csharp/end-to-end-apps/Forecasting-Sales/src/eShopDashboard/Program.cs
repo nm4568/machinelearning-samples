@@ -24,11 +24,15 @@ namespace eShopDashboard
 {
     public class Program
     {
+
+        const int WindowSize = 48;
+        const int SeriesLength = 100;
+        const int TrainSize = 100;
+        const int Horizon = 20;
+
         private static int _seedingProgress = 100;
 
         private static Random rnd = new Random(12345);
-
-        private readonly MLContext mlContext = new MLContext();
 
         private static RiskDTO risk =  new RiskDTO();
 
@@ -312,10 +316,10 @@ namespace eShopDashboard
                     mlContext.Forecasting.ForecastBySsa(
                         outputColumnName: nameof(RiskPrediction.ForecastedValues),
                         inputColumnName: nameof(RiskData.riskValue), // This is the column being forecasted.
-                        windowSize: 10, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
-                        seriesLength: 100, 
-                        trainSize: 80,
-                        horizon: 20, // Indicates the number of values to forecast
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength, 
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
                         confidenceLevel: 0.95f, 
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound), 
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
@@ -368,10 +372,10 @@ namespace eShopDashboard
                     mlContext.Forecasting.ForecastBySsa(
                         outputColumnName: nameof(RiskPrediction.ForecastedValues),
                         inputColumnName: nameof(RiskData.riskValue), // This is the column being forecasted.
-                        windowSize: 10, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
-                        seriesLength: 100, 
-                        trainSize: 80,
-                        horizon: 20, // Indicates the number of values to forecast
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength,
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
                         confidenceLevel: 0.95f, 
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound), 
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
@@ -424,10 +428,10 @@ namespace eShopDashboard
                     mlContext.Forecasting.ForecastBySsa(
                         outputColumnName: nameof(RiskPrediction.ForecastedValues),
                         inputColumnName: nameof(RiskBaseData.riskBaseValue), // This is the column being forecasted.
-                        windowSize: 10, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
-                        seriesLength: 100,
-                        trainSize: 80,
-                        horizon: 20, // Indicates the number of values to forecast
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength,
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
                         confidenceLevel: 0.95f,
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
@@ -480,10 +484,10 @@ namespace eShopDashboard
                     mlContext.Forecasting.ForecastBySsa(
                         outputColumnName: nameof(RiskPrediction.ForecastedValues),
                         inputColumnName: nameof(RiskBaseData.riskBaseValue), // This is the column being forecasted.
-                        windowSize: 10, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
-                        seriesLength: 100,
-                        trainSize: 80,
-                        horizon: 20, // Indicates the number of values to forecast
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength,
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
                         confidenceLevel: 0.95f,
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
