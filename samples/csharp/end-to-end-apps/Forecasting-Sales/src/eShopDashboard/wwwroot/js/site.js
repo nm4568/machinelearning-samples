@@ -111,6 +111,7 @@ function plotLineChart(data, key, chartTitle) {
         }
     });
     var trace_real = TraceProductHistory(real, key);
+    debugger;
     var trace_forecast = TraceProductForecast(
         forecast,
         forecast,
@@ -173,7 +174,7 @@ function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
     var x = $.map(historyItems, function (d) { return d.day; });
     var texts = $.map(historyItems, function (d) { return d[key]; });
-
+    var fill_color = (key === "min" || key === "max") ? "#CCCCCC" : "#00A69C";
     return {
         x: x,
         y: y,
@@ -181,7 +182,7 @@ function TraceProductHistory(historyItems, key) {
         name: 'history',
         line: {
             shape: 'spline',
-            color: '#dd1828'
+            color: fill_color
         },
         hoveron: 'points',
         hoverinfo: 'text',
@@ -208,6 +209,8 @@ function TraceProductHistory(historyItems, key) {
 }
 
 function TraceProductForecast(labels, next_x_label, next_text, prev_text, values, forecast, key) {
+    var fill_color = (key === "min" || key === "max") ? "#CCCCCC" : "#00A69C";
+
     return {
         y: $.map(labels, function (label) {
             return label[key];
@@ -219,7 +222,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
             return label[key];
         }),
         mode: 'lines+markers',
-        name: 'forecasting',
+        name: key === "min" || key === "max" ? key : "forecasting",
         hoveron: 'points',
         hoverinfo: 'text',
         hoverlabel: {
@@ -231,7 +234,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         },
         line: {
             shape: 'spline',
-            color: '#00A69C'
+            color: fill_color
         },
         // fill: 'tozeroy',
         // fillcolor: '#00A69C',
