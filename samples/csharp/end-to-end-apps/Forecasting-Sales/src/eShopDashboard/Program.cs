@@ -562,10 +562,12 @@ namespace eShopDashboard
 
                 risk.riskImpact1.Add(new RiskImpactData
                 {
-                    riskId = 2,
+                    riskId = 1,
                     day = i,
                     count = 100,
-                    riskImpactValue = riskValue1 * riskBaseValue1
+                    riskImpactValue = riskValue1 * riskBaseValue1,
+                    min = riskImpactValue1min,
+                    max = riskImpactValue1max
                 });
 
                 risk.riskImpact2.Add(new RiskImpactData
@@ -573,15 +575,19 @@ namespace eShopDashboard
                     riskId = 2,
                     day = i,
                     count = 100,
-                    riskImpactValue = riskValue2 * riskBaseValue2
+                    riskImpactValue = riskValue2 * riskBaseValue2,
+                    min = riskImpactValue2min,
+                    max = riskImpactValue2max
                 });
 
                 risk.riskImpactEntity.Add(new RiskImpactData
                 {
-                    riskId = 2,
+                    riskId = 1,
                     day = i,
                     count = 100,
-                    riskImpactValue = riskValue1 * riskBaseValue1 + riskValue2 * riskBaseValue2
+                    riskImpactValue = riskImpactEntityValue,
+                    min = riskImpactEntityValuemin,
+                    max = riskImpactEntityValuemax
                 });
             }
         }

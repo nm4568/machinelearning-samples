@@ -118,7 +118,7 @@ namespace eShopForecast
 
         public override string ToString()
         {
-            return $"RiskImpactData [ riskId: {riskId}, day: {day}, next: {next:0000}, impactValue: {riskImpactValue:0000}, avg: {avg:000}, count: {count:00}, max: {max:000}, min: {min}, prev: {prev:0000} ]";
+            return $"RiskImpactData [ riskId: {riskId}, day: {day}, impactValue: {riskImpactValue}, max: {max}, min: {min} ]";
         }
     }
 
