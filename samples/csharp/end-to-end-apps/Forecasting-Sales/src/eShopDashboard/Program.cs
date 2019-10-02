@@ -557,7 +557,7 @@ namespace eShopDashboard
                 float riskImpactValue2max = riskValue2max * riskBaseValue2max;
 
                 float riskImpactEntityValue = riskImpactValue1 + riskImpactValue2;
-                float riskImpactEntityValuemin = riskImpactValue1min + riskImpactValue2max;
+                float riskImpactEntityValuemin = riskImpactValue1min + riskImpactValue2min;
                 float riskImpactEntityValuemax = riskImpactValue1max + riskImpactValue2max;
 
                 risk.riskImpact1.Add(new RiskImpactData
