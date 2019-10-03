@@ -245,7 +245,7 @@ function TraceProductForecastConfidence(labels) {
         xaxis: 'x',
         yaxis: 'y',
         line: {
-            shape: 'hvh',//shape: 'hvh'
+            shape: 'spline',//shape: 'hvh'
             color: "#CCCCCC"
         },
         fillcolor: "#F8F8F8",
