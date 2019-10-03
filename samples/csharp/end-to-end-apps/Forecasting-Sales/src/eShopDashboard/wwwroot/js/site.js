@@ -60,14 +60,17 @@ function plotLineChart(data, key, chartTitle) {
 
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#DE68FF');
 
-    var tick_format='';
+    var tick_format = '';
+    var scale_range = '';
     var y_axis_title;
     if ((chartTitle == 'impact_entity_lineChart_1') || (chartTitle != 'impact_entity_lineChart_1' && key == 'riskImpactValue')) {
         y_axis_title = '$ Impact';
         tick_format = '$, .0';
     }
         else if (key == 'riskValue') {
-        y_axis_title = 'Probability';
+        y_axis_title = 'Probability %';
+        //tick_format = ',.0%';
+        scale_range = [0, 1];
     } else if (key == 'riskBaseValue') {
         y_axis_title = 'Sales';
         tick_format = '$, .0';
@@ -112,6 +115,7 @@ function plotLineChart(data, key, chartTitle) {
                 size: 8,
                 color: 'black'
             },
+            //range: scale_range,
            
         },
         hovermode: "closest",
