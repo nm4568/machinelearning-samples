@@ -8,12 +8,18 @@
 {
     @await Html.PartialAsync("_Seeding.cshtml")
 }
-
 <div style="width:100%">
     <div class="row">
         <div class="col-12 bg-highlight py-3 pl-md-4" style="color: white; font-size: 17pt; line-height: 1.25">
             @ViewData["Title"]
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <button id="refreshButton" type="button" class="btn btn-primary float-right" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin: 5px;">
+            Auto-Refresh
+        </button>
     </div>
 </div>
 
@@ -111,6 +117,8 @@
     <script type="text/javascript">
         $(function () {
             onLoadProductForecasting();
+            $('#refreshButton').on('click', handleRefresh);
+
         });
     </script>
 }
