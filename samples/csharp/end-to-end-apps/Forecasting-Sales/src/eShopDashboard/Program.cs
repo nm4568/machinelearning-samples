@@ -313,7 +313,7 @@ namespace eShopDashboard
                     riskId = 2,
                     day = -1f,
                     count = 100,
-                    riskImpactValue = riskValue2 * riskBaseValue2
+                    riskImpactValue = (float)Math.Round(riskValue2 * riskBaseValue2, 2)
                 });
 
                 risk.riskImpactEntity.Add(new RiskImpactData
@@ -321,7 +321,7 @@ namespace eShopDashboard
                     riskId = 1,
                     day = -1f,
                     count = 100,
-                    riskImpactValue = riskValue1 * riskBaseValue1 + riskValue2 * riskBaseValue2
+                    riskImpactValue = (float)Math.Round(riskValue1 * riskBaseValue1 + riskValue2 * riskBaseValue2, 2)
                 });
             }
 
@@ -359,15 +359,15 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i<20; i++)
                 {
-                    var riskValue1 = risk1Estimation.ForecastedValues[i];
+                    var riskValue1 = (float)Math.Round(risk1Estimation.ForecastedValues[i],2);
                     if (riskValue1 > 100f) riskValue1 = 100f;
                     if (riskValue1 < 0f) riskValue1 = 0f;
 
-                    var riskValue1min = risk1Estimation.ConfidenceLowerBound[i];
+                    var riskValue1min = (float)Math.Round(risk1Estimation.ConfidenceLowerBound[i], 2);
                     if (riskValue1min > 100f) riskValue1min = 100f;
                     if (riskValue1min < 0f) riskValue1min = 0f;
 
-                    var riskValue1max = risk1Estimation.ConfidenceUpperBound[i];
+                    var riskValue1max = (float)Math.Round(risk1Estimation.ConfidenceUpperBound[i], 2);
                     if (riskValue1max > 100f) riskValue1max = 100f;
                     if (riskValue1max < 0f) riskValue1max = 0f;
 
@@ -415,15 +415,15 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i<20; i++)
                 {
-                    var riskValue2 = risk2Estimation.ForecastedValues[i];
+                    var riskValue2 = (float)Math.Round(risk2Estimation.ForecastedValues[i],2);
                     if (riskValue2 > 100f) riskValue2 = 100f;
                     if (riskValue2 < 0f) riskValue2 = 0f;
 
-                    var riskValue2min = risk2Estimation.ConfidenceLowerBound[i];
+                    var riskValue2min = (float)Math.Round(risk2Estimation.ConfidenceLowerBound[i],2);
                     if (riskValue2min > 100f) riskValue2min = 100f;
                     if (riskValue2min < 0f) riskValue2min = 0f;
 
-                    var riskValue2max = risk2Estimation.ConfidenceUpperBound[i];
+                    var riskValue2max = (float)Math.Round(risk2Estimation.ConfidenceUpperBound[i],2);
                     if (riskValue2max > 100f) riskValue2max = 100f;
                     if (riskValue2max < 0f) riskValue2max = 0f;
 
@@ -471,15 +471,15 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i < 20; i++)
                 {
-                    var riskBaseValue1 = riskBase1Estimation.ForecastedValues[i];
+                    var riskBaseValue1 = (float)Math.Round(riskBase1Estimation.ForecastedValues[i],2);
                     if (riskBaseValue1 > 10f) riskBaseValue1 = 10f;
                     if (riskBaseValue1 < 0f) riskBaseValue1 = 0f;
 
-                    var riskBaseValue1min = riskBase1Estimation.ConfidenceLowerBound[i];
+                    var riskBaseValue1min = (float)Math.Round(riskBase1Estimation.ConfidenceLowerBound[i],2);
                     if (riskBaseValue1min > 10f) riskBaseValue1min = 10f;
                     if (riskBaseValue1min < 0f) riskBaseValue1min = 0f;
 
-                    var riskBaseValue1max = riskBase1Estimation.ConfidenceUpperBound[i];
+                    var riskBaseValue1max = (float)Math.Round(riskBase1Estimation.ConfidenceUpperBound[i],2);
                     if (riskBaseValue1max > 10f) riskBaseValue1max = 10f;
                     if (riskBaseValue1max < 0f) riskBaseValue1max = 0f;
 
@@ -527,15 +527,15 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i < 20; i++)
                 {
-                    var riskBaseValue2 = riskBase2Estimation.ForecastedValues[i];
+                    var riskBaseValue2 = (float)Math.Round(riskBase2Estimation.ForecastedValues[i], 2);
                     if (riskBaseValue2 > 10f) riskBaseValue2 = 10f;
                     if (riskBaseValue2 < 0f) riskBaseValue2 = 0f;
 
-                    var riskBaseValue2min = riskBase2Estimation.ConfidenceLowerBound[i];
+                    var riskBaseValue2min = (float)Math.Round(riskBase2Estimation.ConfidenceLowerBound[i],2);
                     if (riskBaseValue2min > 10f) riskBaseValue2min = 10f;
                     if (riskBaseValue2min < 0f) riskBaseValue2min = 0f;
 
-                    var riskBaseValue2max = riskBase2Estimation.ConfidenceUpperBound[i];
+                    var riskBaseValue2max = (float)Math.Round(riskBase2Estimation.ConfidenceUpperBound[i],2);
                     if (riskBaseValue2max > 10f) riskBaseValue2max = 10f;
                     if (riskBaseValue2max < 0f) riskBaseValue2max = 0f;
 
@@ -584,11 +584,11 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i < 20; i++)
                 {
-                    var riskValue1min = risk1Estimation.ConfidenceLowerBound[i];
+                    var riskValue1min = (float)Math.Round(risk1Estimation.ConfidenceLowerBound[i],2);
                     if (riskValue1min > 100f) riskValue1min = 100f;
                     if (riskValue1min < 0f) riskValue1min = 0f;
 
-                    var riskValue1max = risk1Estimation.ConfidenceUpperBound[i];
+                    var riskValue1max = (float)Math.Round(risk1Estimation.ConfidenceUpperBound[i],2);
                     if (riskValue1max > 100f) riskValue1max = 100f;
                     if (riskValue1max < 0f) riskValue1max = 0f;
 
@@ -628,11 +628,11 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i < 20; i++)
                 {
-                    var riskValue2min = risk2Estimation.ConfidenceLowerBound[i];
+                    var riskValue2min = (float)Math.Round(risk2Estimation.ConfidenceLowerBound[i],2);
                     if (riskValue2min > 100f) riskValue2min = 100f;
                     if (riskValue2min < 0f) riskValue2min = 0f;
 
-                    var riskValue2max = risk2Estimation.ConfidenceUpperBound[i];
+                    var riskValue2max = (float)Math.Round(risk2Estimation.ConfidenceUpperBound[i],2);
                     if (riskValue2max > 100f) riskValue2max = 100f;
                     if (riskValue2max < 0f) riskValue2max = 0f;
 
@@ -672,11 +672,11 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i < 20; i++)
                 {
-                    var riskBaseValue1min = riskBase1Estimation.ConfidenceLowerBound[i];
+                    var riskBaseValue1min = (float)Math.Round(riskBase1Estimation.ConfidenceLowerBound[i],2);
                     if (riskBaseValue1min > 10f) riskBaseValue1min = 10f;
                     if (riskBaseValue1min < 0f) riskBaseValue1min = 0f;
 
-                    var riskBaseValue1max = riskBase1Estimation.ConfidenceUpperBound[i];
+                    var riskBaseValue1max = (float)Math.Round(riskBase1Estimation.ConfidenceUpperBound[i],2);
                     if (riskBaseValue1max > 10f) riskBaseValue1max = 10f;
                     if (riskBaseValue1max < 0f) riskBaseValue1max = 0f;
 
@@ -716,11 +716,11 @@ namespace eShopDashboard
                 // Apply estimations to risk data
                 for (int i = 0; i < 20; i++)
                 {
-                    var riskBaseValue2min = riskBase2Estimation.ConfidenceLowerBound[i];
+                    var riskBaseValue2min = (float)Math.Round(riskBase2Estimation.ConfidenceLowerBound[i],2);
                     if (riskBaseValue2min > 10f) riskBaseValue2min = 10f;
                     if (riskBaseValue2min < 0f) riskBaseValue2min = 0f;
 
-                    var riskBaseValue2max = riskBase2Estimation.ConfidenceUpperBound[i];
+                    var riskBaseValue2max = (float)Math.Round(riskBase2Estimation.ConfidenceUpperBound[i],2);
                     if (riskBaseValue2max > 10f) riskBaseValue2max = 10f;
                     if (riskBaseValue2max < 0f) riskBaseValue2max = 0f;
 
@@ -779,11 +779,11 @@ namespace eShopDashboard
                     riskId = 1,
                     day = i,
                     count = 100,
-                    riskImpactValue = riskValue1 * riskBaseValue1,
-                    min = riskImpactValue1min,
-                    max = riskImpactValue1max,
-                    minx = riskImpactValue1minx,
-                    maxx = riskImpactValue1maxx
+                    riskImpactValue = (float)Math.Round(riskValue1 * riskBaseValue1,2),
+                    min = (float)Math.Round(riskImpactValue1min,2),
+                    max = (float)Math.Round(riskImpactValue1max,2),
+                    minx = (float)Math.Round(riskImpactValue1minx,2),
+                    maxx = (float)Math.Round(riskImpactValue1maxx,2)
                 });
 
                 risk.riskImpact2.Add(new RiskImpactData
@@ -791,11 +791,11 @@ namespace eShopDashboard
                     riskId = 2,
                     day = i,
                     count = 100,
-                    riskImpactValue = riskValue2 * riskBaseValue2,
-                    min = riskImpactValue2min,
-                    max = riskImpactValue2max,
-                    minx = riskImpactValue2minx,
-                    maxx = riskImpactValue2maxx
+                    riskImpactValue = (float)Math.Round(riskValue2 * riskBaseValue2,2),
+                    min = (float)Math.Round(riskImpactValue2min,2),
+                    max = (float)Math.Round(riskImpactValue2max,2),
+                    minx = (float)Math.Round(riskImpactValue2minx,2),
+                    maxx = (float)Math.Round(riskImpactValue2maxx,2)
                 });
 
                 risk.riskImpactEntity.Add(new RiskImpactData
@@ -803,11 +803,11 @@ namespace eShopDashboard
                     riskId = 1,
                     day = i,
                     count = 100,
-                    riskImpactValue = riskImpactEntityValue,
-                    min = riskImpactEntityValuemin,
-                    max = riskImpactEntityValuemax,
-                    minx = riskImpactEntityValueminx,
-                    maxx = riskImpactEntityValuemaxx
+                    riskImpactValue = (float)Math.Round(riskImpactEntityValue,2),
+                    min = (float)Math.Round(riskImpactEntityValuemin,2),
+                    max = (float)Math.Round(riskImpactEntityValuemax, 2),
+                    minx = (float)Math.Round(riskImpactEntityValueminx, 2),
+                    maxx = (float)Math.Round(riskImpactEntityValuemaxx,2)
                 });
             }
         }
