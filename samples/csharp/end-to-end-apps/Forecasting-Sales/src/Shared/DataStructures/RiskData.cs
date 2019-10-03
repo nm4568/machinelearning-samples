@@ -45,6 +45,12 @@ namespace eShopForecast
         [LoadColumn(8)]
         public float prev;
 
+        [LoadColumn(9)]
+        public float maxx;
+
+        [LoadColumn(10)]
+        public float minx;
+
         public override string ToString()
         {
             return $"RiskData [ riskId: {riskId}, day: {day}, next: {next:0000}, value: {riskValue:0000}, avg: {avg:000}, count: {count:00}, max: {max:000}, min: {min}, prev: {prev:0000} ]";
@@ -81,6 +87,12 @@ namespace eShopForecast
         [LoadColumn(8)]
         public float prev;
 
+        [LoadColumn(9)]
+        public float maxx;
+
+        [LoadColumn(10)]
+        public float minx;
+
         public override string ToString()
         {
             return $"RiskBaseData [ riskId: {riskId}, day: {day}, next: {next:0000}, baseValue: {riskBaseValue:0000}, avg: {avg:000}, count: {count:00}, max: {max:000}, min: {min}, prev: {prev:0000} ]";
@@ -115,6 +127,12 @@ namespace eShopForecast
 
         [LoadColumn(8)]
         public float prev;
+
+        [LoadColumn(9)]
+        public float maxx;
+
+        [LoadColumn(10)]
+        public float minx;
 
         public override string ToString()
         {

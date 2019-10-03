@@ -30,6 +30,9 @@ namespace eShopDashboard
         const int TrainSize = 100;
         const int Horizon = 20;
 
+        const float ConfidenceLevel = 0.95f;
+        const float ConfidenceLevelX = 0.80f;
+
         private static int _seedingProgress = 100;
 
         private static Random rnd = new Random(12345);
@@ -192,15 +195,25 @@ namespace eShopDashboard
         public static void MoveByDay()
         {
             // Drop predicted
-            risk.risk1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
-            risk.riskBase1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
-            risk.riskImpact1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+            risk.risk1.RemoveRange(100,20);
+            risk.riskBase1.RemoveRange(100, 20);
+            risk.riskImpact1.RemoveRange(100, 20);
 
-            risk.risk2.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
-            risk.riskBase2.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
-            risk.riskImpact2.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+            risk.risk2.RemoveRange(100, 20);
+            risk.riskBase2.RemoveRange(100, 20);
+            risk.riskImpact2.RemoveRange(100, 20);
 
-            risk.riskImpactEntity.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+            risk.riskImpactEntity.RemoveRange(100, 20);
+
+            //risk.risk1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+            //risk.riskBase1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+            //risk.riskImpact1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+
+            //risk.risk2.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+            //risk.riskBase2.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+            //risk.riskImpact2.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
+
+            //risk.riskImpactEntity.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
 
             // Drop the oldest
             risk.risk1.RemoveAll(d => Math.Abs(d.day+100.0f) < 1e-6);
@@ -306,6 +319,8 @@ namespace eShopDashboard
             }
 
             // Insert predicted
+            
+            // 95%
             { 
                 var mlContext = new MLContext();
 
@@ -320,7 +335,7 @@ namespace eShopDashboard
                         seriesLength: SeriesLength, 
                         trainSize: TrainSize,
                         horizon: Horizon, // Indicates the number of values to forecast
-                        confidenceLevel: 0.95f, 
+                        confidenceLevel: ConfidenceLevel, 
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound), 
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
 
@@ -376,7 +391,7 @@ namespace eShopDashboard
                         seriesLength: SeriesLength,
                         trainSize: TrainSize,
                         horizon: Horizon, // Indicates the number of values to forecast
-                        confidenceLevel: 0.95f, 
+                        confidenceLevel: ConfidenceLevel, 
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound), 
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
 
@@ -432,7 +447,7 @@ namespace eShopDashboard
                         seriesLength: SeriesLength,
                         trainSize: TrainSize,
                         horizon: Horizon, // Indicates the number of values to forecast
-                        confidenceLevel: 0.95f,
+                        confidenceLevel: ConfidenceLevel,
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
 
@@ -488,7 +503,7 @@ namespace eShopDashboard
                         seriesLength: SeriesLength,
                         trainSize: TrainSize,
                         horizon: Horizon, // Indicates the number of values to forecast
-                        confidenceLevel: 0.95f,
+                        confidenceLevel: ConfidenceLevel,
                         confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
                         confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
 
@@ -530,35 +545,227 @@ namespace eShopDashboard
                 }
             }
 
+            // 80%
+            {
+                var mlContext = new MLContext();
+
+                var risk1DataView = mlContext.Data.LoadFromEnumerable(risk.risk1);
+
+                // Create and add the forecast estimator to the pipeline.
+                IEstimator<ITransformer> risk1ForecastEstimator =
+                    mlContext.Forecasting.ForecastBySsa(
+                        outputColumnName: nameof(RiskPrediction.ForecastedValues),
+                        inputColumnName: nameof(RiskData.riskValue), // This is the column being forecasted.
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength,
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
+                        confidenceLevel: ConfidenceLevelX,
+                        confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
+                        confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
+
+                // Train the forecasting model for the specified risk's data series.
+                ITransformer risk1ForecastTransformer = risk1ForecastEstimator.Fit(risk1DataView);
+
+                // Create the forecast engine used for creating predictions.
+                TimeSeriesPredictionEngine<RiskData, RiskPrediction> risk1ForecastEngine =
+                    risk1ForecastTransformer.CreateTimeSeriesEngine<RiskData, RiskPrediction>(mlContext);
+
+                // Predict
+                var risk1Estimation = risk1ForecastEngine.Predict();
+
+                // Apply estimations to risk data
+                for (int i = 0; i < 20; i++)
+                {
+                    var riskValue1min = risk1Estimation.ConfidenceLowerBound[i];
+                    if (riskValue1min > 100f) riskValue1min = 100f;
+                    if (riskValue1min < 0f) riskValue1min = 0f;
+
+                    var riskValue1max = risk1Estimation.ConfidenceUpperBound[i];
+                    if (riskValue1max > 100f) riskValue1max = 100f;
+                    if (riskValue1max < 0f) riskValue1max = 0f;
+
+                    risk.risk1[i].minx = riskValue1min;
+                    risk.risk1[i].maxx = riskValue1max;
+                }
+            }
+
+            {
+                var mlContext = new MLContext();
+
+                var risk2DataView = mlContext.Data.LoadFromEnumerable(risk.risk2);
+
+                // Create and add the forecast estimator to the pipeline.
+                IEstimator<ITransformer> risk2ForecastEstimator =
+                    mlContext.Forecasting.ForecastBySsa(
+                        outputColumnName: nameof(RiskPrediction.ForecastedValues),
+                        inputColumnName: nameof(RiskData.riskValue), // This is the column being forecasted.
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength,
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
+                        confidenceLevel: ConfidenceLevelX,
+                        confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
+                        confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
+
+                // Train the forecasting model for the specified risk's data series.
+                ITransformer risk2ForecastTransformer = risk2ForecastEstimator.Fit(risk2DataView);
+
+                // Create the forecast engine used for creating predictions.
+                TimeSeriesPredictionEngine<RiskData, RiskPrediction> risk2ForecastEngine =
+                    risk2ForecastTransformer.CreateTimeSeriesEngine<RiskData, RiskPrediction>(mlContext);
+
+                // Predict
+                var risk2Estimation = risk2ForecastEngine.Predict();
+
+                // Apply estimations to risk data
+                for (int i = 0; i < 20; i++)
+                {
+                    var riskValue2min = risk2Estimation.ConfidenceLowerBound[i];
+                    if (riskValue2min > 100f) riskValue2min = 100f;
+                    if (riskValue2min < 0f) riskValue2min = 0f;
+
+                    var riskValue2max = risk2Estimation.ConfidenceUpperBound[i];
+                    if (riskValue2max > 100f) riskValue2max = 100f;
+                    if (riskValue2max < 0f) riskValue2max = 0f;
+
+                    risk.risk2[i].minx = riskValue2min;
+                    risk.risk2[i].maxx = riskValue2max;
+                }
+            }
+
+            {
+                var mlContext = new MLContext();
+
+                var riskBase1DataView = mlContext.Data.LoadFromEnumerable(risk.riskBase1);
+
+                // Create and add the forecast estimator to the pipeline.
+                IEstimator<ITransformer> riskBase1ForecastEstimator =
+                    mlContext.Forecasting.ForecastBySsa(
+                        outputColumnName: nameof(RiskPrediction.ForecastedValues),
+                        inputColumnName: nameof(RiskBaseData.riskBaseValue), // This is the column being forecasted.
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength,
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
+                        confidenceLevel: ConfidenceLevelX,
+                        confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
+                        confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
+
+                // Train the forecasting model for the specified risk's data series.
+                ITransformer riskBase1ForecastTransformer = riskBase1ForecastEstimator.Fit(riskBase1DataView);
+
+                // Create the forecast engine used for creating predictions.
+                TimeSeriesPredictionEngine<RiskBaseData, RiskPrediction> riskBase1ForecastEngine =
+                    riskBase1ForecastTransformer.CreateTimeSeriesEngine<RiskBaseData, RiskPrediction>(mlContext);
+
+                // Predict
+                var riskBase1Estimation = riskBase1ForecastEngine.Predict();
+
+                // Apply estimations to risk data
+                for (int i = 0; i < 20; i++)
+                {
+                    var riskBaseValue1min = riskBase1Estimation.ConfidenceLowerBound[i];
+                    if (riskBaseValue1min > 10f) riskBaseValue1min = 10f;
+                    if (riskBaseValue1min < 0f) riskBaseValue1min = 0f;
+
+                    var riskBaseValue1max = riskBase1Estimation.ConfidenceUpperBound[i];
+                    if (riskBaseValue1max > 10f) riskBaseValue1max = 10f;
+                    if (riskBaseValue1max < 0f) riskBaseValue1max = 0f;
+
+                    risk.riskBase1[i].minx = riskBaseValue1min;
+                    risk.riskBase1[i].maxx = riskBaseValue1max;
+                }
+            }
+
+            {
+                var mlContext = new MLContext();
+
+                var riskBase2DataView = mlContext.Data.LoadFromEnumerable(risk.riskBase2);
+
+                // Create and add the forecast estimator to the pipeline.
+                IEstimator<ITransformer> riskBase2ForecastEstimator =
+                    mlContext.Forecasting.ForecastBySsa(
+                        outputColumnName: nameof(RiskPrediction.ForecastedValues),
+                        inputColumnName: nameof(RiskBaseData.riskBaseValue), // This is the column being forecasted.
+                        windowSize: WindowSize, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                        seriesLength: SeriesLength,
+                        trainSize: TrainSize,
+                        horizon: Horizon, // Indicates the number of values to forecast
+                        confidenceLevel: ConfidenceLevelX,
+                        confidenceLowerBoundColumn: nameof(RiskPrediction.ConfidenceLowerBound),
+                        confidenceUpperBoundColumn: nameof(RiskPrediction.ConfidenceUpperBound));
+
+                // Train the forecasting model for the specified risk's data series.
+                ITransformer riskBase2ForecastTransformer = riskBase2ForecastEstimator.Fit(riskBase2DataView);
+
+                // Create the forecast engine used for creating predictions.
+                TimeSeriesPredictionEngine<RiskBaseData, RiskPrediction> riskBase2ForecastEngine =
+                    riskBase2ForecastTransformer.CreateTimeSeriesEngine<RiskBaseData, RiskPrediction>(mlContext);
+
+                // Predict
+                var riskBase2Estimation = riskBase2ForecastEngine.Predict();
+
+                // Apply estimations to risk data
+                for (int i = 0; i < 20; i++)
+                {
+                    var riskBaseValue2min = riskBase2Estimation.ConfidenceLowerBound[i];
+                    if (riskBaseValue2min > 10f) riskBaseValue2min = 10f;
+                    if (riskBaseValue2min < 0f) riskBaseValue2min = 0f;
+
+                    var riskBaseValue2max = riskBase2Estimation.ConfidenceUpperBound[i];
+                    if (riskBaseValue2max > 10f) riskBaseValue2max = 10f;
+                    if (riskBaseValue2max < 0f) riskBaseValue2max = 0f;
+
+                    risk.riskBase2[i].minx = riskBaseValue2min;
+                    risk.riskBase2[i].maxx = riskBaseValue2max;
+                }
+            }
+
             // Insert impact predictions
             for (int i = 0; i < 20; i++)
             {
                 var riskValue1 = risk.risk1.Single(d => Math.Abs(d.day - i) < 1e-6).riskValue;
                 var riskValue1min = risk.risk1.Single(d => Math.Abs(d.day - i) < 1e-6).min;
                 var riskValue1max = risk.risk1.Single(d => Math.Abs(d.day - i) < 1e-6).max;
-                
+                var riskValue1minx = risk.risk1.Single(d => Math.Abs(d.day - i) < 1e-6).minx;
+                var riskValue1maxx = risk.risk1.Single(d => Math.Abs(d.day - i) < 1e-6).maxx;
+
                 var riskBaseValue1 = risk.riskBase1.Single(d => Math.Abs(d.day - i) < 1e-6).riskBaseValue;
                 var riskBaseValue1min = risk.riskBase1.Single(d => Math.Abs(d.day - i) < 1e-6).min;
                 var riskBaseValue1max = risk.riskBase1.Single(d => Math.Abs(d.day - i) < 1e-6).max;
+                var riskBaseValue1minx = risk.riskBase1.Single(d => Math.Abs(d.day - i) < 1e-6).minx;
+                var riskBaseValue1maxx = risk.riskBase1.Single(d => Math.Abs(d.day - i) < 1e-6).maxx;
 
                 var riskValue2 = risk.risk2.Single(d => Math.Abs(d.day - i) < 1e-6).riskValue;
                 var riskValue2min = risk.risk2.Single(d => Math.Abs(d.day - i) < 1e-6).min;
                 var riskValue2max = risk.risk2.Single(d => Math.Abs(d.day - i) < 1e-6).max;
+                var riskValue2minx = risk.risk2.Single(d => Math.Abs(d.day - i) < 1e-6).minx;
+                var riskValue2maxx = risk.risk2.Single(d => Math.Abs(d.day - i) < 1e-6).maxx;
 
                 var riskBaseValue2 = risk.riskBase2.Single(d => Math.Abs(d.day - i) < 1e-6).riskBaseValue;
                 var riskBaseValue2min = risk.riskBase2.Single(d => Math.Abs(d.day - i) < 1e-6).min;
                 var riskBaseValue2max = risk.riskBase2.Single(d => Math.Abs(d.day - i) < 1e-6).max;
+                var riskBaseValue2minx = risk.riskBase2.Single(d => Math.Abs(d.day - i) < 1e-6).minx;
+                var riskBaseValue2maxx = risk.riskBase2.Single(d => Math.Abs(d.day - i) < 1e-6).maxx;
 
                 float riskImpactValue1 = riskValue1 * riskBaseValue1;
                 float riskImpactValue1min = riskValue1min * riskBaseValue1min;
                 float riskImpactValue1max = riskValue1max * riskBaseValue1max;
+                float riskImpactValue1minx = riskValue1minx * riskBaseValue1minx;
+                float riskImpactValue1maxx = riskValue1maxx * riskBaseValue1maxx;
+
                 float riskImpactValue2 = riskValue2 * riskBaseValue2;
                 float riskImpactValue2min = riskValue2min * riskBaseValue2min;
                 float riskImpactValue2max = riskValue2max * riskBaseValue2max;
+                float riskImpactValue2minx = riskValue2minx * riskBaseValue2minx;
+                float riskImpactValue2maxx = riskValue2maxx * riskBaseValue2maxx;
 
                 float riskImpactEntityValue = riskImpactValue1 + riskImpactValue2;
                 float riskImpactEntityValuemin = riskImpactValue1min + riskImpactValue2min;
                 float riskImpactEntityValuemax = riskImpactValue1max + riskImpactValue2max;
+                float riskImpactEntityValueminx = riskImpactValue1minx + riskImpactValue2minx;
+                float riskImpactEntityValuemaxx = riskImpactValue1maxx + riskImpactValue2maxx;
 
                 risk.riskImpact1.Add(new RiskImpactData
                 {
@@ -567,7 +774,9 @@ namespace eShopDashboard
                     count = 100,
                     riskImpactValue = riskValue1 * riskBaseValue1,
                     min = riskImpactValue1min,
-                    max = riskImpactValue1max
+                    max = riskImpactValue1max,
+                    minx = riskImpactValue1minx,
+                    maxx = riskImpactValue1maxx
                 });
 
                 risk.riskImpact2.Add(new RiskImpactData
@@ -577,7 +786,9 @@ namespace eShopDashboard
                     count = 100,
                     riskImpactValue = riskValue2 * riskBaseValue2,
                     min = riskImpactValue2min,
-                    max = riskImpactValue2max
+                    max = riskImpactValue2max,
+                    minx = riskImpactValue2minx,
+                    maxx = riskImpactValue2maxx
                 });
 
                 risk.riskImpactEntity.Add(new RiskImpactData
@@ -587,7 +798,9 @@ namespace eShopDashboard
                     count = 100,
                     riskImpactValue = riskImpactEntityValue,
                     min = riskImpactEntityValuemin,
-                    max = riskImpactEntityValuemax
+                    max = riskImpactEntityValuemax,
+                    minx = riskImpactEntityValueminx,
+                    maxx = riskImpactEntityValuemaxx
                 });
             }
         }
