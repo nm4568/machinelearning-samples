@@ -63,20 +63,24 @@ function plotLineChart(data, key, chartTitle) {
     var tick_format = '';
     var scale_range = '';
     var y_axis_title;
+    var width = null;
     if ((chartTitle == 'impact_entity_lineChart_1') || (chartTitle != 'impact_entity_lineChart_1' && key == 'riskImpactValue')) {
         y_axis_title = '$ Impact';
         tick_format = '$, .0';
+        if (chartTitle === 'impact_lineChart_1' || chartTitle === 'impact_lineChart_2') {
+            width = 450;
+        }
     }
         else if (key == 'riskValue') {
         y_axis_title = 'Probability %';
         //tick_format = ',.0%';
         scale_range = [0, 1];
+        width = 450;
     } else if (key == 'riskBaseValue') {
         y_axis_title = 'Sales';
         tick_format = '$, .0';
-    }
-
-   
+        width = 450;
+    }   
 
     
     var layout = {
@@ -130,8 +134,9 @@ function plotLineChart(data, key, chartTitle) {
                 size:8
             }
         },
+        width: width,
         margin: {
-            b: 20,
+            b: 35,
             l: 40,
             r: 10,
             t: 20
