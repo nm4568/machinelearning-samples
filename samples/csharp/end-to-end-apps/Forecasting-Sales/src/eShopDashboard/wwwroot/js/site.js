@@ -230,7 +230,7 @@ function TraceProductForecastConfidence(labels) {
             return allY[index];
         }),
         mode: "lines+markers",
-        name: "90% Confidence",
+        name: "95% Confidence",
         type: 'scatter',
         hoveron: 'points',
         hoverinfo: 'text',
