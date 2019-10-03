@@ -194,9 +194,12 @@ function plotLineChart(data, key, chartTitle) {
         }
     };
 
-    //populating the charts
+    // hide the modebar (hover bar) buttons, plotly logo. show plotly tooltips
+    var defaultPlotlyConfiguration = { modeBarButtonsToRemove: ['sendDataToCloud', 'autoScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'lasso2d', 'select2d'], displaylogo: false, showTips: true };
 
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_forecast_min, trace_forecast_max, trace_mean], layout, { showSendToCloud: true, displayModeBar: false });}
+    //populating the charts
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_forecast_min, trace_forecast_max, trace_mean], layout, defaultPlotlyConfiguration);
+}//{ showSendToCloud: true, displayModeBar: false }
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
