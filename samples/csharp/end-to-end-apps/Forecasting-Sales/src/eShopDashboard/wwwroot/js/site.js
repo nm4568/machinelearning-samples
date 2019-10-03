@@ -1,21 +1,6 @@
-﻿// PRODUCT FORECASTING
-
-var months = ["",
-    "Jan", "Feb", "Mar",
-    "Apr", "May", "Jun", "Jul",
-    "Aug", "Sep", "Oct",
-    "Nov", "Dec"
-];
-
-var full_months = ["",
-    "January", "February", "March",
-    "April", "May", "June", "July",
-    "August", "September", "October",
-    "November", "December"];
-
+﻿
 function onLoadProductForecasting() {
     setResponsivePlots();
-    setUpProductDescriptionTypeahead();
     $("footer").addClass("sticky");
 }
 
@@ -33,34 +18,6 @@ function setResponsivePlots(plotSelector = ".responsive-plot") {
     };
 }
 
-function setUpProductDescriptionTypeahead(typeaheadSelector = "#remote .typeahead") {
-    var productDescriptions = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        remote: {
-            url: `${apiUri.catalog}/productSetDetailsByDescription?description=%QUERY`,
-            wildcard: '%QUERY'
-        }
-    });
-
-    $(typeaheadSelector)
-        .typeahead
-        ({
-            minLength: 3,
-            highlight: true
-        },
-        {
-            name: 'products',
-            display: 'description',
-            limit: 10,
-            source: productDescriptions
-        })
-        .on('typeahead:selected', function (e, data) {
-            updateProductInfo(data);
-            getProductData(data, e.currentTarget.baseURI.split("/").pop());
-        });
-}
-
 function updateProductInfo(data) {
     $("#product").removeClass("d-none");
     $("#productName").text(data.description);
@@ -68,38 +25,13 @@ function updateProductInfo(data) {
     $("#productImage").attr("src", data.pictureUri).attr("alt", data.description);   
 }
 
-function getProductData(product, page) {
-    productId = product.id;
-    description = product.description;
-
-    getHistory(productId)
-        .done(function (history) {
-            if (history.length < 4) return;
-            $.when(
-                getForecast(history[history.length - 1], page)
-            ).done(function (forecast) {
-                plotLineChart(forecast, history, description, product.price);
-            });
-        });
-}
-
-    function getHistory() {
+function getHistory() {
     return $.getJSON(`${window.location.origin}/risk`);
 }
 
-function getStats(productId) {
-    return $.getJSON(`${apiUri.ordering}/product/${productId}/stats`);
-}
 
 function plotLineChart(data, key, chartTitle) {
-    //for(i = 0; i < history.length; i++) {
-    //    history[i].sales = history[i].units * price;
-    //}
-    //forecast *= price;
-    var description = data[0];
     var history = data[1];
-    var forecast = 1;
-    //updateProductStatistics(description, history.slice(history.length - 120), forecast);
     var real = history.filter(function (element, index) {
         if (index <= 100) {
             return element;
@@ -111,7 +43,7 @@ function plotLineChart(data, key, chartTitle) {
         }
     });
     var trace_real = TraceProductHistory(real, key);
-    debugger;
+
     var trace_forecast = TraceProductForecast(
         forecast,
         forecast,
@@ -120,22 +52,8 @@ function plotLineChart(data, key, chartTitle) {
         trace_real.y,
         forecast,
         key);
-    var trace_forecast_min = TraceProductForecast(
-        forecast,
-        forecast,
-        history[history.length - 1],
-        trace_real.text[trace_real.text.length - 1],
-        trace_real.y,
-        forecast,
-        'min');
-    var trace_forecast_max = TraceProductForecast(
-        forecast,
-        forecast,
-        history[history.length - 1],
-        trace_real.text[trace_real.text.length - 1],
-        trace_real.y,
-        forecast,
-        'max');
+    var trace_forecast_confidence = TraceProductForecastConfidence(
+        forecast);
 
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#DE68FF');
 
@@ -195,8 +113,7 @@ function plotLineChart(data, key, chartTitle) {
     };
 
     //populating the charts
-
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_forecast_min, trace_forecast_max, trace_mean], layout, { showSendToCloud: true, displayModeBar: false });}
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence, trace_forecast, trace_mean], layout, { showSendToCloud: true, displayModeBar: false });}
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
@@ -209,8 +126,8 @@ function TraceProductHistory(historyItems, key) {
         mode: 'lines+markers',
         name: 'history',
         line: {
-            shape: 'spline',
-            color: '#E1334E'
+            color: "rgba(242,242,242,1)",
+            fillcolor: "rgba(242,242,242,1)"
         },
         hoveron: 'points',
         hoverinfo: 'text',
@@ -238,8 +155,6 @@ function TraceProductHistory(historyItems, key) {
 }
 
 function TraceProductForecast(labels, next_x_label, next_text, prev_text, values, forecast, key) {
-    var fill_color = (key === "min" || key === "max") ? "#CCCCCC" : "#00A69C";
-
     return {
         y: $.map(labels, function (label) {
             return label[key];
@@ -268,7 +183,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         line: {
             dash: key === "min" || key === "max" ? 'dot' : "dashdot",
             shape: 'spline',//shape: 'hvh'
-            color: fill_color,
+            color: "#00A69C",
             
         },
         fill: key === "min" || key === "max" ? 'tonexty' : '',//toself, tonexty, tozeroy
@@ -284,6 +199,66 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         }
     };
 }
+
+function TraceProductForecastConfidence(labels) {
+    var x = $.map(labels, function (label) {
+        return label.day;
+    });
+
+    var reverseX = [...x].reverse();
+
+    var y = $.map(labels, function (label) {
+        return label["max"];
+    });
+
+    var yBottom = $.map(labels, function (label) {
+        return label["min"];
+    });
+    var reverseY = yBottom.reverse();
+
+    var allX = x.concat(reverseX);
+    var allY = y.concat(reverseY);
+
+    return {
+        fill: "toself",
+        y: allY,
+        x: allX,
+        text: $.map(labels, function (label, index) {
+            return allY[index];
+        }),
+        mode: "lines+markers",
+        name: "90% Confidence",
+        type: 'scatter',
+        hoveron: 'points',
+        hoverinfo: 'text',
+        hoverlabel: {
+            bgcolor: 'white',
+            bordercolor: '#333333',
+            font: {
+                color: 'black',
+                size: 8
+            }
+        },
+        xaxis: 'x',
+        yaxis: 'y',
+        line: {
+            dash: 'dot',
+            shape: 'spline',//shape: 'hvh'
+            color: "#CCCCCC"
+        },
+        fillcolor: "#CCCCCC",
+        marker: {
+            symbol: "circle",
+            color: "#B4FF00",
+            size: 3,
+            line: {
+                color: "black",
+                width: 0.5
+            }
+        }
+    };
+}
+
 
 function TraceMean(labels, values, color) {
     var y_mean = values.slice(0, values.length - 2).reduce((previous, current) => current += previous) / values.length;
@@ -301,23 +276,6 @@ function TraceMean(labels, values, color) {
 }
 
 
-function onLoadCountryForecasting() {
-    setResponsivePlots();
-    $("footer").addClass("sticky");
-}
-function updateProductStatistics(product, historyItems, forecasting) {
-    showStatsLayers();
-
-    //populateForecastDashboard(product, historyItems, forecasting);
-    populateHistoryTable(historyItems);
-
-    refreshHeightSidebar();
-}
-
-function showStatsLayers() {
-    $("#plot,#tableHeader,#tableHistory").removeClass('d-none');
-}
-
 function populateForecastDashboard(country, historyItems, forecasting, units = false) {
     var lastday = historyItems[historyItems.length - 1].day;
     var values = historyItems.map(y => y.year === lastday ? y.sales : 0);
@@ -331,33 +289,6 @@ function populateForecastDashboard(country, historyItems, forecasting, units = f
     $("#tableHeaderCaption").text(`Sales ${units ? "units" : (1).toCurrencyLocaleString().replace("1.00", "")} / month`);
 }
 
-function populateHistoryTable(historyItems) {
-    var table = '';
-    var lastYear = '';
-    for (i = 0; i < historyItems.length; i++) {
-        if (historyItems[i].year !== lastYear) {
-            lastYear = historyItems[i].year;
-            table += `<div class="col-11 border-bottom-highlight-table month font-weight-bold">${lastYear}</div>`;
-        }
-        table += `<div class="col-8 border-bottom-highlight-table month">${full_months[historyItems[i].month]}</div> <div class="col-3 border-bottom-highlight-table">${historyItems[i].sales.toLocaleString()}</div >`;
-    }
-    $("#historyTable").empty().append($(table));
-}
-
-function refreshHeightSidebar() {
-    $("aside").css('height', $(document).height());
-}
-
-Number.prototype.toCurrencyLocaleString = function toCurrencyLocaleString() {
-    var currentLocale = navigator.languages ? navigator.languages[0] : navigator.language;
-    return this.toLocaleString(currentLocale, { style: 'currency', currency: 'USD' });
-};
-
-Number.prototype.toNumberLocaleString = function toNumberLocaleString() {
-    var currentLocale = navigator.languages ? navigator.languages[0] : navigator.language;
-    return this.toLocaleString(currentLocale, { useGrouping: true }) + " units";
-};
-
 $(function () {
     getHistory()
         .done(function (data, index) {
@@ -369,28 +300,23 @@ $(function () {
                     case 0:
                     case 1:
                         key = 'riskValue';
-                        chartTitle = 'risk_lineChart'
+                        chartTitle = 'risk_lineChart';
                         break;
                     case 2:
                     case 3:
                         key = 'riskBaseValue';
-                        chartTitle = 'base_lineChart'
+                        chartTitle = 'base_lineChart';
                         break;
                     case 4:
                     case 5:
                         key = 'riskImpactValue';
-                        chartTitle = 'impact_lineChart'
+                        chartTitle = 'impact_lineChart';
                         break;
                     case 6:
                         key = 'riskImpactValue';
-                        chartTitle = 'impact_entity_lineChart'
+                        chartTitle = 'impact_entity_lineChart';
                         break;
                 }
-
-                /*
-                if (index === 7) { return; }
-                console.log(chartTitle + suffix);
-                */
 
                 plotLineChart(chartData, key, chartTitle + suffix);
             });
