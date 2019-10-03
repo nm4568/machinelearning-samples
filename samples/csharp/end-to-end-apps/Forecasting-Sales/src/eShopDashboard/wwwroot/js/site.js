@@ -137,44 +137,72 @@ function plotLineChart(data, key, chartTitle) {
         forecast,
         'max');
 
-    var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#ccff00');
+    var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#DE68FF');
 
+    
     var layout = {
-                   
+        //title: 'chart_title',      
+        
         xaxis: {
             tickangle: 0,
             showgrid: false,
             showline: false,
-            zeroline: false,
-            range: [trace_real.x.minLength, trace_real.x.length] // was 12 beforen
+            zeroline: true,
+            //showticklabels: true,
+            //autotick: false,
+            ticks: 'outside',
+            //tickcolor: 'rgb(204,204,204)',
+            tickwidth: 2,
+            ticklen: 5,
+            tickfont: {
+                family: 'Arial',
+                size: 8,
+                color: 'black'
+            },
+            showgrid: true,            
+            title: 'Days',
+            //domain: [0, 1],        
+            range: [trace_real.x.minLength-0, trace_real.x.length] // was 12 beforen
 
         },
         yaxis: {
             showgrid: false,
             showline: false,
-            zeroline: false,
-            tickformat: '$,.0'
+            zeroline: true,
+            title: 'Sales',
+            //domain: [0, 1], 
+            tickformat: '$, .0',
+            tickfont: {
+                family: 'Arial',
+                size: 8,
+                color: 'black'
+            },
+           
         },
         hovermode: "closest",
         //dragmode: 'pan',
+        
         legend: {
             orientation: "h",
-            xanchor: "center",
+            xanchor: "right",
             yanchor: "top",
-            y: 1.2,
-            x: 0.85
+            y: 10.5,
+            x: 0.85,
+            font: {
+                size:8
+            }
         }
     };
 
     //populating the charts
 
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_forecast_min, trace_forecast_max, trace_mean], {}, { showSendToCloud: true });}
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast, trace_forecast_min, trace_forecast_max, trace_mean], layout, { showSendToCloud: true, displayModeBar: false });}
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
     var x = $.map(historyItems, function (d) { return d.day; });
     var texts = $.map(historyItems, function (d) { return d[key]; });
-    var fill_color = (key === "min" || key === "max") ? "#CCCCCC" : "#00A69C";
+   
     return {
         x: x,
         y: y,
@@ -182,15 +210,16 @@ function TraceProductHistory(historyItems, key) {
         name: 'history',
         line: {
             shape: 'spline',
-            color: fill_color
+            color: '#E1334E'
         },
         hoveron: 'points',
         hoverinfo: 'text',
         hoverlabel: {
-            bgcolor: '#333333',
+            bgcolor: 'white',
             bordercolor: '#333333',
             font: {
-                color: 'white'
+                color: 'black',
+                size: 8
             }
         },
         text: texts,
@@ -198,11 +227,11 @@ function TraceProductHistory(historyItems, key) {
         // fillcolor: 'red',
         marker: {
             symbol: "circle",
-            color: "white",
+            color: "#B4FF00",
             size: 3,
             line: {
                 color: "black",
-                width: 1
+                width: 0.5
             }
         }
     };
@@ -221,30 +250,36 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         text: $.map(labels, function (label) {
             return label[key];
         }),
-        mode: 'lines+markers',
+        mode: key === "min" || key === "max" ? 'lines+markers' : "lines+markers",
         name: key === "min" || key === "max" ? key : "forecasting",
+        type: key === "min" || key === "max" ? 'scatter' : "spline",
         hoveron: 'points',
         hoverinfo: 'text',
         hoverlabel: {
-            bgcolor: '#333333',
+            bgcolor: 'white',
             bordercolor: '#333333',
             font: {
-                color: 'white'
+                color: 'black',
+                size: 8
             }
-        },
+        },     
+        xaxis: 'x',
+        yaxis:'y',
         line: {
-            shape: 'spline',
-            color: fill_color
+            dash: key === "min" || key === "max" ? 'dot' : "dashdot",
+            shape: 'spline',//shape: 'hvh'
+            color: fill_color,
+            
         },
-        // fill: 'tozeroy',
-        // fillcolor: '#00A69C',
+        fill: key === "min" || key === "max" ? 'tonexty' : '',//toself, tonexty, tozeroy
+         //fillcolor: '#00A69C',
         marker: {
             symbol: "circle",
-            color: "white",
+            color: "#B4FF00",
             size: 3,
             line: {
                 color: "black",
-                width: 1
+                width: 0.5
             }
         }
     };
@@ -260,7 +295,7 @@ function TraceMean(labels, values, color) {
         hoverinfo: 'none',
         line: {
             color: color,
-            width: 3
+            width: 2
         }
     };
 }
