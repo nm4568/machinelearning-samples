@@ -148,7 +148,7 @@ function plotLineChart(data, key, chartTitle) {
 
     //populating the charts
     //debugger;
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence95, trace_forecast_confidence80, trace_forecast, trace_mean], layout, defaultPlotlyConfiguration);
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence95, trace_forecast_confidence80, trace_forecast], layout, defaultPlotlyConfiguration);
 }
 
 function TraceProductHistory(historyItems, key) {
