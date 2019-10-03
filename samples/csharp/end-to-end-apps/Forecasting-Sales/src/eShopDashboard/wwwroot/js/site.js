@@ -293,9 +293,9 @@ function TraceProductForecastConfidence(labels, l_confidence) {
         yaxis: 'y',
         line: {
             shape: 'spline',//shape: 'hvh'
-            color: l_confidence === 80 ? "#00AFF0" : 'F2F2F2',
+            color: l_confidence === 80 ? "#00AFF0" : '#7A297B',
         },
-        fillcolor: l_confidence === 80 ? "#C8EBFA" : 'F8F8F8',
+        fillcolor: l_confidence === 80 ? "#C8EBFA" : '#DAAADB',
         marker: {
             symbol: "circle",
             color: "#B4FF00",
