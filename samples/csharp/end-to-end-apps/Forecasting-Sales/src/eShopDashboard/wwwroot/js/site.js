@@ -131,7 +131,7 @@ function plotLineChart(data, key, chartTitle) {
             }
         },
         margin: {
-            b: 20,
+            b: 40,
             l: 40,
             r: 10,
             t: 20
