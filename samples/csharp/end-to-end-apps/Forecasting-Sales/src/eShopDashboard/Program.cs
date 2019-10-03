@@ -30,8 +30,8 @@ namespace eShopDashboard
         const int TrainSize = 100;
         const int Horizon = 20;
 
-        const float ConfidenceLevel = 0.95f;
-        const float ConfidenceLevelX = 0.80f;
+        const float ConfidenceLevel = 0.80f;
+        const float ConfidenceLevelX = 0.95f;
 
         private static int _seedingProgress = 100;
 
@@ -827,13 +827,13 @@ namespace eShopDashboard
 
             for (int i = 0; i < 100; i++)
             {
-                float riskValue1 = riskValue1lag + 0.03f * (rnd.Next(0, 100) - 50);
-                //float riskValue1 = riskValue1lag + RandNormal(0, 0.03f);
+                //float riskValue1 = riskValue1lag + 0.03f * (rnd.Next(0, 100) - 50);
+                float riskValue1 = riskValue1lag + RandNormal(0, 0.03f);
                 if (riskValue1 > 100f) riskValue1 = 100f;
                 if (riskValue1 < 0f) riskValue1 = 0f;
 
-                float riskBaseValue1 = riskBaseValue1lag + 0.01f * (rnd.Next(0, 100) - 50);
-                //float riskBaseValue1 = riskBaseValue1lag + RandNormal(0, 0.1f);
+                //float riskBaseValue1 = riskBaseValue1lag + 0.01f * (rnd.Next(0, 100) - 50);
+                float riskBaseValue1 = riskBaseValue1lag + RandNormal(0, 0.01f);
                 if (riskBaseValue1 > 10f) riskBaseValue1 = 10f;
                 if (riskBaseValue1 < 0f) riskBaseValue1 = 0f;
 
