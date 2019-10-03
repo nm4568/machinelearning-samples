@@ -6,9 +6,6 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Controllers\SalesForecastingController.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Dapper.StrongName" Version="1.50.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />

@@ -329,7 +329,11 @@ function populateForecastDashboard(country, historyItems, forecasting, units = f
     $("#tableHeaderCaption").text(`Sales ${units ? "units" : (1).toCurrencyLocaleString().replace("1.00", "")} / month`);
 }
 
-$(function () {
+var refreshRate = 1000;
+var refreshEnabled = false;
+var interval = null;
+
+function initialize() {
     getHistory()
         .done(function (data, index) {
             Object.entries(data).forEach(function (chartData, index) {
@@ -361,5 +365,22 @@ $(function () {
                 plotLineChart(chartData, key, chartTitle + suffix);
             });
         });
+
+}
+
+function handleRefresh() {
+    //toggle boolean
+    refreshEnabled = !refreshEnabled;
+    if (refreshEnabled) {
+        interval = setInterval(initialize, refreshRate);
+    } else {
+        clearInterval(interval);
+    }
+}
+
+$(function () {
+    initialize();
 });
+
+
 
