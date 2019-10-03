@@ -60,10 +60,24 @@ function plotLineChart(data, key, chartTitle) {
 
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#DE68FF');
 
+    var tick_format='';
+    var y_axis_title;
+    if ((chartTitle == 'impact_entity_lineChart_1') || (chartTitle != 'impact_entity_lineChart_1' && key == 'riskImpactValue')) {
+        y_axis_title = '$ Impact';
+        tick_format = '$, .0';
+    }
+        else if (key == 'riskValue') {
+        y_axis_title = 'Probability';
+    } else if (key == 'riskBaseValue') {
+        y_axis_title = 'Sales';
+        tick_format = '$, .0';
+    }
+
+   
+
     
     var layout = {
-        //title: 'chart_title',      
-        
+        //title: 'chart_title',       
         xaxis: {
             tickangle: 0,
             showgrid: false,
@@ -90,9 +104,9 @@ function plotLineChart(data, key, chartTitle) {
             showgrid: false,
             showline: false,
             zeroline: true,
-            title: 'Sales',
+            title: y_axis_title,
             //domain: [0, 1], 
-            tickformat: '$, .0',
+            tickformat: tick_format,
             tickfont: {
                 family: 'Arial',
                 size: 8,
@@ -120,7 +134,7 @@ function plotLineChart(data, key, chartTitle) {
 
     //populating the charts
     //debugger;
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence80, trace_forecast_confidence95, trace_forecast, trace_mean], layout, defaultPlotlyConfiguration);
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence95, trace_forecast_confidence80, trace_forecast, trace_mean], layout, defaultPlotlyConfiguration);
 }
 
 function TraceProductHistory(historyItems, key) {
@@ -265,9 +279,9 @@ function TraceProductForecastConfidence(labels, l_confidence) {
         yaxis: 'y',
         line: {
             shape: 'spline',//shape: 'hvh'
-            color: l_confidence === 95 ? "#CCCCCC" : 'F2F2F2',
+            color: l_confidence === 80 ? "#00AFF0" : 'F2F2F2',
         },
-        fillcolor: l_confidence === 95 ? "#E2E2E2" : 'F8F8F8',
+        fillcolor: l_confidence === 80 ? "#C8EBFA" : 'F8F8F8',
         marker: {
             symbol: "circle",
             color: "#B4FF00",
