@@ -147,7 +147,6 @@ function plotLineChart(data, key, chartTitle) {
     var defaultPlotlyConfiguration = { modeBarButtonsToRemove: ['sendDataToCloud', 'hoverClosestCartesian', 'hoverCompareCartesian', 'lasso2d', 'select2d'], displaylogo: false, showTips: true, showSendToCloud: true };
 
     //populating the charts
-    debugger;
     Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence95, trace_forecast_confidence80, trace_forecast], layout, defaultPlotlyConfiguration);
 }
 
