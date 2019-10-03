@@ -52,8 +52,11 @@ function plotLineChart(data, key, chartTitle) {
         trace_real.y,
         forecast,
         key);
-    var trace_forecast_confidence = TraceProductForecastConfidence(
-        forecast);
+    var trace_forecast_confidence95 = TraceProductForecastConfidence(
+        forecast, 95);
+
+    var trace_forecast_confidence80 = TraceProductForecastConfidence(
+        forecast, 80);
 
     var trace_mean = TraceMean(trace_real.x.concat(trace_forecast.x), trace_real.y, '#DE68FF');
 
@@ -113,10 +116,12 @@ function plotLineChart(data, key, chartTitle) {
     };
 
     // hide the modebar (hover bar) buttons, plotly logo. show plotly tooltips
-    var defaultPlotlyConfiguration = { modeBarButtonsToRemove: ['sendDataToCloud', 'hoverClosestCartesian', 'hoverCompareCartesian', 'lasso2d', 'select2d'], displaylogo: false, showTips: true };
+    var defaultPlotlyConfiguration = { modeBarButtonsToRemove: ['sendDataToCloud', 'hoverClosestCartesian', 'hoverCompareCartesian', 'lasso2d', 'select2d'], displaylogo: false, showTips: true, showSendToCloud: true };
 
     //populating the charts
-    Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence, trace_forecast, trace_mean], layout, { showSendToCloud: true, displayModeBar: false });}
+    //debugger;
+    Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence80, trace_forecast_confidence95, trace_forecast, trace_mean], layout, defaultPlotlyConfiguration);
+}
 
 function TraceProductHistory(historyItems, key) {
     var y = $.map(historyItems, function (d) { return d[key]; });
@@ -203,21 +208,35 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
     };
 }
 
-function TraceProductForecastConfidence(labels) {
+function TraceProductForecastConfidence(labels, l_confidence) {
     var x = $.map(labels, function (label) {
         return label.day;
     });
 
     var reverseX = [...x].reverse();
 
-    var y = $.map(labels, function (label) {
-        return label["max"];
-    });
+    if (l_confidence === 95) {
 
-    var yBottom = $.map(labels, function (label) {
-        return label["min"];
-    });
-    var reverseY = yBottom.reverse();
+        var y = $.map(labels, function (label) {
+            return label["max"];
+        });
+
+        var yBottom = $.map(labels, function (label) {
+            return label["min"];
+        });
+        var reverseY = yBottom.reverse();
+
+    }
+    else if (l_confidence === 80) {
+        var y = $.map(labels, function (label) {
+            return label["maxx"];
+        });
+
+        var yBottom = $.map(labels, function (label) {
+            return label["minx"];
+        });
+        var reverseY = yBottom.reverse();
+    }
 
     var allX = x.concat(reverseX);
     var allY = y.concat(reverseY);
@@ -230,7 +249,7 @@ function TraceProductForecastConfidence(labels) {
             return allY[index];
         }),
         mode: "lines",
-        name: "95% Confidence",
+        name: l_confidence===95 ? "95% Confidence": "80% Confidence",
         type: 'scatter',
         hoveron: 'points',
         hoverinfo: 'text',
@@ -246,9 +265,9 @@ function TraceProductForecastConfidence(labels) {
         yaxis: 'y',
         line: {
             shape: 'spline',//shape: 'hvh'
-            color: "#CCCCCC"
+            color: l_confidence === 95 ? "#CCCCCC" : 'F2F2F2',
         },
-        fillcolor: "#F8F8F8",
+        fillcolor: l_confidence === 95 ? "#E2E2E2" : 'F8F8F8',
         marker: {
             symbol: "circle",
             color: "#B4FF00",
