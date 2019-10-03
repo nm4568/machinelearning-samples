@@ -198,15 +198,15 @@ namespace eShopDashboard
         public static void MoveByDay()
         {
             // Drop predicted
-            risk.risk1.RemoveRange(100,20);
-            risk.riskBase1.RemoveRange(100, 20);
-            risk.riskImpact1.RemoveRange(100, 20);
+            if (risk.risk1.Count == 120) risk.risk1.RemoveRange(100,20);
+            if (risk.riskBase1.Count == 120) risk.riskBase1.RemoveRange(100, 20);
+            if (risk.riskImpact1.Count == 120) risk.riskImpact1.RemoveRange(100, 20);
 
-            risk.risk2.RemoveRange(100, 20);
-            risk.riskBase2.RemoveRange(100, 20);
-            risk.riskImpact2.RemoveRange(100, 20);
+            if (risk.risk2.Count == 120) risk.risk2.RemoveRange(100, 20);
+            if (risk.riskBase2.Count == 120) risk.riskBase2.RemoveRange(100, 20);
+            if (risk.riskImpact2.Count == 120) risk.riskImpact2.RemoveRange(100, 20);
 
-            risk.riskImpactEntity.RemoveRange(100, 20);
+            if (risk.riskImpactEntity.Count == 120) risk.riskImpactEntity.RemoveRange(100, 20);
 
             //risk.risk1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
             //risk.riskBase1.RemoveAll(d => Math.Abs(d.min) > 1e-6 || Math.Abs(d.max) > 1e-6);
