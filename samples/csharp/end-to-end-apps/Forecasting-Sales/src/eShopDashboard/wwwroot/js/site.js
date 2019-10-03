@@ -112,6 +112,9 @@ function plotLineChart(data, key, chartTitle) {
         }
     };
 
+    // hide the modebar (hover bar) buttons, plotly logo. show plotly tooltips
+    var defaultPlotlyConfiguration = { modeBarButtonsToRemove: ['sendDataToCloud', 'hoverClosestCartesian', 'hoverCompareCartesian', 'lasso2d', 'select2d'], displaylogo: false, showTips: true };
+
     //populating the charts
     Plotly.newPlot(chartTitle, [trace_real, trace_forecast_confidence, trace_forecast, trace_mean], layout, { showSendToCloud: true, displayModeBar: false });}
 
