@@ -30,8 +30,11 @@ namespace eShopDashboard
         const int TrainSize = 100;
         const int Horizon = 20;
 
-        const float ConfidenceLevel = 0.80f;
-        const float ConfidenceLevelX = 0.95f;
+        const float ConfidenceLevel = 0.95f;
+        const float ConfidenceLevelX = 0.80f;
+
+        const float StdDevP = 0.03f;
+        const float StdDevM = 0.01f;
 
         private static int _seedingProgress = 100;
 
@@ -244,20 +247,24 @@ namespace eShopDashboard
             risk.riskImpactEntity.ForEach(d => { d.day -= 1.0f; });
 
             // Invent today (day -1.0f)
-            { 
-                float riskValue1 = riskValue1lag + 0.03f * (rnd.Next(0, 100) - 50);
+            {
+                //float riskValue1 = riskValue1lag + 0.03f * (rnd.Next(0, 100) - 50);
+                float riskValue1 = riskValue1lag + RandNormal(0, StdDevP);
                 if (riskValue1 > 100f) riskValue1 = 100f;
                 if (riskValue1 < 0f) riskValue1 = 0f;
 
-                float riskBaseValue1 = riskBaseValue1lag + 0.01f * (rnd.Next(0, 100) - 50);
+                //float riskBaseValue1 = riskBaseValue1lag + 0.01f * (rnd.Next(0, 100) - 50);
+                float riskBaseValue1 = riskBaseValue1lag + RandNormal(0, StdDevM);
                 if (riskBaseValue1 > 10f) riskBaseValue1 = 10f;
                 if (riskBaseValue1 < 0f) riskBaseValue1 = 0f;
 
-                float riskValue2 = riskValue2lag + 0.03f * (rnd.Next(0, 100) - 50);
+                //float riskValue2 = riskValue2lag + 0.03f * (rnd.Next(0, 100) - 50);
+                float riskValue2 = riskValue2lag + +RandNormal(0, StdDevP);
                 if (riskValue2 > 100f) riskValue2 = 100f;
                 if (riskValue2 < 0f) riskValue2 = 0f;
 
-                float riskBaseValue2 = riskBaseValue2lag + 0.01f * (rnd.Next(0, 100) - 50);
+                //float riskBaseValue2 = riskBaseValue2lag + 0.01f * (rnd.Next(0, 100) - 50);
+                float riskBaseValue2 = riskBaseValue2lag + RandNormal(0, StdDevM);
                 if (riskBaseValue2 > 10f) riskBaseValue2 = 10f;
                 if (riskBaseValue2 < 0f) riskBaseValue2 = 0f;
 
@@ -828,23 +835,24 @@ namespace eShopDashboard
             for (int i = 0; i < 100; i++)
             {
                 //float riskValue1 = riskValue1lag + 0.03f * (rnd.Next(0, 100) - 50);
-                float riskValue1 = riskValue1lag + RandNormal(0, 0.03f);
+                float riskValue1 = riskValue1lag + RandNormal(0, StdDevP);
                 if (riskValue1 > 100f) riskValue1 = 100f;
                 if (riskValue1 < 0f) riskValue1 = 0f;
 
                 //float riskBaseValue1 = riskBaseValue1lag + 0.01f * (rnd.Next(0, 100) - 50);
-                float riskBaseValue1 = riskBaseValue1lag + RandNormal(0, 0.01f);
+                float riskBaseValue1 = riskBaseValue1lag + RandNormal(0, StdDevM);
                 if (riskBaseValue1 > 10f) riskBaseValue1 = 10f;
                 if (riskBaseValue1 < 0f) riskBaseValue1 = 0f;
 
-                float riskValue2 = riskValue2lag + 0.03f * (rnd.Next(0, 100) - 50);
+                //float riskValue2 = riskValue2lag + 0.03f * (rnd.Next(0, 100) - 50);
+                float riskValue2 = riskValue2lag + RandNormal(0, StdDevP);
                 if (riskValue2 > 100f) riskValue2 = 100f;
                 if (riskValue2 < 0f) riskValue2 = 0f;
 
-                float riskBaseValue2 = riskBaseValue2lag + 0.01f * (rnd.Next(0, 100) - 50);
+                //float riskBaseValue2 = riskBaseValue2lag + 0.01f * (rnd.Next(0, 100) - 50);
+                float riskBaseValue2 = riskBaseValue2lag + RandNormal(0, StdDevM);
                 if (riskBaseValue2 > 10f) riskBaseValue2 = 10f;
                 if (riskBaseValue2 < 0f) riskBaseValue2 = 0f;
-
 
                 riskValue1lag = riskValue1;
                 riskBaseValue1lag = riskBaseValue1;
