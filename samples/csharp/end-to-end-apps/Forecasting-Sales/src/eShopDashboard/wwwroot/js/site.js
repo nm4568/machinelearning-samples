@@ -101,8 +101,7 @@ function plotLineChart(data, key, chartTitle) {
            
         },
         hovermode: "closest",
-        //dragmode: 'pan',
-        
+        //dragmode: 'pan',        
         legend: {
             orientation: "h",
             xanchor: "right",
@@ -112,6 +111,12 @@ function plotLineChart(data, key, chartTitle) {
             font: {
                 size:8
             }
+        },
+        margin: {
+            b: 20,
+            l: 40,
+            r: 10,
+            t: 20
         }
     };
 
