@@ -585,8 +585,8 @@ namespace eShopDashboard
                     if (riskValue1max > 100f) riskValue1max = 100f;
                     if (riskValue1max < 0f) riskValue1max = 0f;
 
-                    risk.risk1[i].minx = riskValue1min;
-                    risk.risk1[i].maxx = riskValue1max;
+                    risk.risk1[i + 100].minx = riskValue1min;
+                    risk.risk1[i + 100].maxx = riskValue1max;
                 }
             }
 
@@ -629,8 +629,8 @@ namespace eShopDashboard
                     if (riskValue2max > 100f) riskValue2max = 100f;
                     if (riskValue2max < 0f) riskValue2max = 0f;
 
-                    risk.risk2[i].minx = riskValue2min;
-                    risk.risk2[i].maxx = riskValue2max;
+                    risk.risk2[i + 100].minx = riskValue2min;
+                    risk.risk2[i + 100].maxx = riskValue2max;
                 }
             }
 
@@ -673,8 +673,8 @@ namespace eShopDashboard
                     if (riskBaseValue1max > 10f) riskBaseValue1max = 10f;
                     if (riskBaseValue1max < 0f) riskBaseValue1max = 0f;
 
-                    risk.riskBase1[i].minx = riskBaseValue1min;
-                    risk.riskBase1[i].maxx = riskBaseValue1max;
+                    risk.riskBase1[i + 100].minx = riskBaseValue1min;
+                    risk.riskBase1[i + 100].maxx = riskBaseValue1max;
                 }
             }
 
@@ -717,8 +717,8 @@ namespace eShopDashboard
                     if (riskBaseValue2max > 10f) riskBaseValue2max = 10f;
                     if (riskBaseValue2max < 0f) riskBaseValue2max = 0f;
 
-                    risk.riskBase2[i].minx = riskBaseValue2min;
-                    risk.riskBase2[i].maxx = riskBaseValue2max;
+                    risk.riskBase2[i + 100].minx = riskBaseValue2min;
+                    risk.riskBase2[i + 100].maxx = riskBaseValue2max;
                 }
             }
 
@@ -805,6 +805,18 @@ namespace eShopDashboard
             }
         }
 
+        private static float RandNormal(double mean, double stdDev)
+        {
+            double u1 = 1.0 - rnd.NextDouble(); //uniform(0,1] random doubles
+            double u2 = 1.0 - rnd.NextDouble();
+            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                         Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+            double randNormal =
+                         mean + stdDev * randStdNormal; //random normal(mean,stdDev^2)
+
+            return (float)randNormal;
+        }
+
         private static void PopulateRiskData()
         {
 
@@ -816,10 +828,12 @@ namespace eShopDashboard
             for (int i = 0; i < 100; i++)
             {
                 float riskValue1 = riskValue1lag + 0.03f * (rnd.Next(0, 100) - 50);
+                //float riskValue1 = riskValue1lag + RandNormal(0, 0.03f);
                 if (riskValue1 > 100f) riskValue1 = 100f;
                 if (riskValue1 < 0f) riskValue1 = 0f;
 
                 float riskBaseValue1 = riskBaseValue1lag + 0.01f * (rnd.Next(0, 100) - 50);
+                //float riskBaseValue1 = riskBaseValue1lag + RandNormal(0, 0.1f);
                 if (riskBaseValue1 > 10f) riskBaseValue1 = 10f;
                 if (riskBaseValue1 < 0f) riskBaseValue1 = 0f;
 
