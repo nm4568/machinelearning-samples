@@ -126,11 +126,11 @@ function TraceProductHistory(historyItems, key) {
     return {
         x: x,
         y: y,
-        mode: 'lines+markers',
+        mode: 'lines',
         name: 'history',
         line: {
-            color: "rgba(242,242,242,1)",
-            fillcolor: "rgba(242,242,242,1)"
+            shape: 'spline',
+            color: '#E1334E'
         },
         hoveron: 'points',
         hoverinfo: 'text',
@@ -168,7 +168,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         text: $.map(labels, function (label) {
             return label[key];
         }),
-        mode: key === "min" || key === "max" ? 'lines+markers' : "lines+markers",
+        mode: key === "min" || key === "max" ? 'lines' : "lines",
         name: key === "min" || key === "max" ? key : "forecasting",
         type: key === "min" || key === "max" ? 'scatter' : "spline",
         hoveron: 'points',
@@ -184,7 +184,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         xaxis: 'x',
         yaxis:'y',
         line: {
-            dash: key === "min" || key === "max" ? 'dot' : "dashdot",
+            //dash: key === "min" || key === "max" ? 'dot' : "dashdot",
             shape: 'spline',//shape: 'hvh'
             color: "#00A69C",
             
@@ -229,7 +229,7 @@ function TraceProductForecastConfidence(labels) {
         text: $.map(labels, function (label, index) {
             return allY[index];
         }),
-        mode: "lines+markers",
+        mode: "lines",
         name: "90% Confidence",
         type: 'scatter',
         hoveron: 'points',
@@ -245,11 +245,10 @@ function TraceProductForecastConfidence(labels) {
         xaxis: 'x',
         yaxis: 'y',
         line: {
-            dash: 'dot',
-            shape: 'spline',//shape: 'hvh'
+            shape: 'hvh',//shape: 'hvh'
             color: "#CCCCCC"
         },
-        fillcolor: "#CCCCCC",
+        fillcolor: "#F8F8F8",
         marker: {
             symbol: "circle",
             color: "#B4FF00",
